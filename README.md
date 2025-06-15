@@ -24,10 +24,10 @@
 
 ## 📁 Структура проекта
 
-HoneyShop/
-├── backend/ # ASP.NET Core Web API
-├── frontend/ # Angular-приложение
-└── README.md
+HoneyShop/  
+├── backend/   # ASP.NET Core Web API  
+├── frontend/  # Angular-приложение  
+└── README.md  
 
 ---
 
