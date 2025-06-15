@@ -124,6 +124,9 @@ dotnet dev-certs https --trust
 ### ➕ Добавление товаров (админ-панель)
 <img src="https://github.com/user-attachments/assets/659f80f3-5e52-4cee-8923-5bc91d028e07" width="800"/>
 
+### 💳 Оплата картой
+<img src="https://github.com/user-attachments/assets/5abc35e4-2dc2-46f1-881e-9bab42946e7e" width="800"/>
+
 ---
 
 ### 📚 Лицензия  
