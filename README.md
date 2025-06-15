@@ -57,7 +57,8 @@ Backend и frontend настроены на работу с локальными
 
 Чтобы избежать предупреждений в браузере и ошибок при работе с HTTPS, выполните команду:
 
-```dotnet dev-certs https --trust
+```
+dotnet dev-certs https --trust
 ```
 
 Она создаст и доверит локальный сертификат для ASP.NET Core.
