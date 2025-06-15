@@ -1,0 +1,58 @@
+<aside class="ml-[-100%] absolute z-10 pb-3 px-6 flex flex-col justify-between min-h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
+    <div>
+
+        <div class="mt-8 text-center">
+            <img [src]="'https://localhost:5001/api/auth/profile-image/' + image" (error)="handleImageError($event)" alt="" class="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28">
+            <h5 class="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">{{ firstName }} {{ lastName }}</h5>
+            <span class="hidden text-gray-400 lg:block">{{ role }}</span>
+        </div>
+
+        <ul class="space-y-2 tracking-wide mt-8">
+            <li>
+                <a [routerLink]="'/dashboard'" routerLinkActive="active" class="relative px-4 py-3 flex items-center space-x-4 text-gray-600 rounded-xl group" [ngClass]="{'text-white bg-gradient-to-r from-amber-600 to-amber-400': isActive('/dashboard'), 'text-gray-600': !isActive('/dashboard')}">
+                    <svg class="-ml-1 h-6 w-6" viewBox="0 0 24 24" fill="none">
+                        <path [ngClass]="{'text-amber-400': isActive('/dashboard')}" d="M6 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8ZM6 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1Z" class="fill-current text-gray-400 group-hover:text-amber-400"></path>
+                        <path [ngClass]="{'text-amber-200': isActive('/dashboard')}" d="M13 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2V8Z" class="fill-current text-gray-300 group-hover:text-amber-200"></path>
+                        <path [ngClass]="{'text-amber-300': isActive('/dashboard')}" d="M13 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-1Z" class="fill-current text-gray-600 group-hover:text-amber-300"></path>
+                    </svg>
+                    <span class="-mr-1 font-medium">Статистика</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="'/admin-categories'" routerLinkActive="active" [ngClass]="{'text-white bg-gradient-to-r from-amber-600 to-amber-400': isActive('/admin-categories')}" class="px-4 py-3 text-gray-600 flex items-center space-x-4 rounded-xl group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path [ngClass]="{'text-amber-300': isActive('/admin-categories')}" class="fill-current text-gray-300 group-hover:text-amber-300" fill-rule="evenodd" d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z" clip-rule="evenodd" />
+                        <path [ngClass]="{'text-amber-400': isActive('/admin-categories')}" class="fill-current text-gray-600 group-hover:text-amber-400" d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z" />
+                    </svg>
+                    <span class="font-medium">Категории</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="'/admin-orders'" routerLinkActive="active" [ngClass]="{'text-white bg-gradient-to-r from-amber-600 to-amber-400': isActive('/admin-orders')}" class="px-4 py-3 text-gray-600 flex items-center space-x-4 rounded-xl group">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path [ngClass]="{'text-amber-400': isActive('/admin-orders')}" class="fill-current text-gray-600 group-hover:text-amber-400" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
+                    </svg>
+                    <span class="font-medium">Заказы</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="'/admin-products'" routerLinkActive="active" [ngClass]="{'text-white bg-gradient-to-r from-amber-600 to-amber-400': isActive('/admin-products')}" class="px-4 py-3 flex items-center space-x-4 rounded-xl text-gray-600 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path [ngClass]="{'text-amber-400': isActive('/admin-products')}" class="fill-current text-gray-600 group-hover:text-amber-400" fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd" />
+                        <path [ngClass]="{'text-amber-300': isActive('/admin-products')}" class="fill-current text-gray-300 group-hover:text-amber-300" d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z" />
+                    </svg>
+                    <span class="font-medium">Продукты</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="'/admin-customers'" [ngClass]="{'text-white bg-gradient-to-r from-amber-600 to-amber-400': isActive('/admin-customers')}" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 448 512">
+                        <path [ngClass]="{'text-amber-400': isActive('/admin-customers')}" class="fill-current text-gray-600 group-hover:text-amber-400" d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7l131.7 0c0 0 0 0 .1 0l5.5 0 112 0 5.5 0c0 0 0 0 .1 0l131.7 0c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2L224 304l-19.7 0c-12.4 0-20.1 13.6-13.7 24.2z"/>
+                    </svg>
+                    <span class="font-medium">Сотрудники</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</aside>

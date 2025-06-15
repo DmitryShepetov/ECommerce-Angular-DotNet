@@ -1,0 +1,306 @@
+
+<div class="min-h-full bg-white">
+  <main class="my-8">
+      <div class="container mx-auto relative">
+          <h3 class="text-gray-700 text-2xl font-medium text-center">Оформление заказа</h3>
+          <div class="flex flex-col lg:flex-row justify-center mt-8 relative">
+              <!-- Order total (располагается сверху на маленьких экранах, справа на больших) -->
+              <div class="w-full mb-5 lg:w-1/4 order-1 lg:order-2 lg:absolute lg:right-0">
+                  <div class="border rounded-md px-4 py-3 shadow-md">
+                      <div class="flex items-center justify-between">
+                          <h3 class="text-gray-700 font-medium">Всего товаров ({{ cart.length }})</h3>
+                      </div>
+                      <div *ngFor="let item of cart" class="flex justify-between mt-6">
+                          <div class="flex">
+                              <img class="h-20 w-20 object-cover rounded" [src]="'https://localhost:5001' + item?.imageUrl" alt="">
+                              <div class="mx-3">
+                                  <h3 class="text-sm text-gray-600">{{ item.name }}</h3>
+                                  <div class="flex items-center mt-2">
+                                    <button (click)="decreaseQuantity(item)" class="inline-flex items-center justify-center p-1 me-3 text-sm font-medium h-6 w-6 text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 " type="button">
+                                      <span class="sr-only">Quantity button</span>
+                                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
+                                      </svg>
+                                  </button>
+
+                                        <span id="first_product" class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 " >{{ item.quantity }}</span>
+
+                                      <button (click)="increaseQuantity(item)" class="inline-flex items-center justify-center h-6 w-6 p-1 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 " type="button">
+                                        <span class="sr-only">Quantity button</span>
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                                        </svg>
+                                    </button>
+                                  </div>
+                              </div>
+                          </div>
+                          <span class="text-gray-600">{{ item.price * item.quantity }} р.</span>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Основной контент (форма, центрируется) -->
+              <div class="w-full lg:w-2/3 xl:w-1/2 order-2 lg:order-1">
+                  <div class="flex items-center justify-center">
+                      <span class="flex text-sm focus:outline-none" [ngClass]="{ 
+                        'text-amber-500': isContact === false, 
+                        'text-gray-700': isContact === true
+                    }">
+                      <span class="flex  items-center justify-center rounded-full h-5 w-5 mr-2" [ngClass]="{ 
+                            'bg-amber-500 text-white': isContact === false, 
+                            'border-2 border-amber-500': isContact === true
+                        }">1</span>
+                          Контакты
+                      </span>
+                      <span class="flex text-sm ml-8 focus:outline-none" [ngClass]="{ 
+                        'text-amber-500': isDelivery === false && isContact === false, 
+                        'text-gray-700': isDelivery === true,
+                        'text-gray-500': isDelivery === false && isContact === true 
+                    }">
+                          <span class="flex  items-center justify-center rounded-full h-5 w-5 mr-2 border-2" [ngClass]="{ 
+                            'bg-amber-500 border-amber-500 text-white': isDelivery === false && isContact === false,
+                            'border-gray-500': isDelivery === false && isContact === true,
+                            'border-amber-500': isDelivery === true
+                            
+                        }">2</span>
+                          Доставка
+                      </span>
+                      <span class="flex text-sm ml-8 focus:outline-none" [ngClass]="{ 
+                        'text-gray-500': isPayment === false, 
+                        'text-gray-700': isPayment === true
+                    }">
+                          <span class="flex items-center border-2 justify-center rounded-full h-5 w-5 mr-2" [ngClass]="{ 
+                            'border-gray-500': isPayment === false, 
+                            'border-amber-500': isPayment === true
+                        }">3</span>
+                          Оплата
+                      </span>
+                  </div>
+                  <div class="mt-8 bg-white p-6 shadow-md rounded-md">
+                  <form>
+                    <div *ngIf="isPayment == true">
+                      <h4 class="text-sm text-gray-500 font-medium">Способ оплаты</h4>
+                      <div class="mt-6 ">
+                        <div  (click)="setPaymentMethod('наличными')"   class="flex items-center cursor-pointer justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                        [ngClass]="{ 'border-amber-500': selectedPayment === 'наличными', 'border-gray-300': selectedPayment !== 'наличными' }"
+                        (click)="selectedPayment = 'наличными'">
+                            <label class="flex items-center cursor-pointer">
+                                <input id="bordered-radio-1" type="radio" name="bordered-radio" class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                [checked]="selectedPayment === 'наличными'">
+                                <label for="bordered-radio-1"  class="ml-2 text-sm text-gray-700 cursor-pointer">Наличными</label>
+                            </label>
+                          </div>
+                          <div class="mt-6"></div>
+                        <div   (click)="setPaymentMethod('картой при получении')"  class="flex cursor-pointer items-center justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                        [ngClass]="{ 'border-amber-500': selectedPayment === 'картой при получении', 'border-gray-300': selectedPayment !== 'картой при получении' }"
+                        (click)="selectedPayment = 'картой при получении'">
+                            <label class="flex items-center cursor-pointer">
+                                <input id="bordered-radio-2" type="radio" name="bordered-radio"  class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                [checked]="selectedPayment === 'картой при получении'">
+                                <label for="bordered-radio-2" class="ml-2 text-sm text-gray-700 cursor-pointer">Картой при получении</label>
+                            </label>
+                        </div>
+                        <div class="mt-6"></div>
+                        <div  (click)="setPaymentMethod('картой онлайн')"   class="flex cursor-pointer items-center justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                        [ngClass]="{ 'border-amber-500': selectedPayment === 'картой онлайн', 'border-gray-300': selectedPayment !== 'картой онлайн' }"
+                        (click)="selectedPayment = 'картой онлайн'">
+                            <label class="flex items-center cursor-pointer">
+                                <input id="bordered-radio-2" type="radio" name="bordered-radio"  class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                [checked]="selectedPayment === 'картой онлайн'">
+                                <label for="bordered-radio-2" class="ml-2 text-sm text-gray-700 cursor-pointer">Картой онлайн</label>
+                            </label>
+                        </div>
+                    </div>
+                      <div class="flex items-center justify-between mt-8">
+                          <button (click)="toDelivery()" class="flex items-center text-gray-700 text-sm font-medium rounded hover:underline focus:outline-none">
+                              <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+                              </svg>
+                              <span class="mx-2">Назад</span>
+                          </button>
+                          <button *ngIf="selectedPayment === 'картой при получении' || selectedPayment === 'наличными'" (click)="submitOrder()" class="flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-500 focus:outline-none focus:bg-amber-500">
+                              <span>Подтвердить</span>
+                              <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                              </svg>
+                          </button>
+                          <button (click)="payment()" *ngIf="selectedPayment === 'картой онлайн'" class="flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-500 focus:outline-none focus:bg-amber-500">
+                            <span>Оплатить</span>
+                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                          </button>
+                      </div>
+                    </div>
+                  <div *ngIf="isContact == true">
+                      <h4 class="text-sm text-gray-500 font-medium">Имя</h4>
+                      <div class="mt-6 flex">
+                        <div class="relative w-full ">
+                          <div class="absolute inset-y-0  flex items-center ps-3.5 pointer-events-none">
+                            <svg class="w-6 h-6 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
+                            </svg>
+                          </div>
+                          <input [(ngModel)]="name" name="name" type="text" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-10 p-2.5"  placeholder="Имя" required>
+                        </div>
+                      </div>
+                        <div class="mt-8">
+                          <h4 class="text-sm text-gray-500 font-medium">Фамилия</h4>
+                          <div class="mt-6 flex">
+                            <div class="relative w-full ">
+                              <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                <svg class="w-6 h-6 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                  <path fill-rule="evenodd" d="M5 8a4 4 0 1 1 7.796 1.263l-2.533 2.534A4 4 0 0 1 5 8Zm4.06 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h2.172a2.999 2.999 0 0 1-.114-1.588l.674-3.372a3 3 0 0 1 .82-1.533L9.06 13Zm9.032-5a2.907 2.907 0 0 0-2.056.852L9.967 14.92a1 1 0 0 0-.273.51l-.675 3.373a1 1 0 0 0 1.177 1.177l3.372-.675a1 1 0 0 0 .511-.273l6.07-6.07a2.91 2.91 0 0 0-.944-4.742A2.907 2.907 0 0 0 18.092 8Z" clip-rule="evenodd"/>
+                                </svg>                                
+                              </div>
+                              <input [(ngModel)]="surname" type="text" name="surname" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-10 p-2.5"  placeholder="Фамилия" required>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mt-8">
+                        <h4 class="text-sm text-gray-500 font-medium">Номер телефона</h4>
+                        <div class="mt-6 flex">
+                          <div class="relative w-full ">
+                            <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 19 18">
+                                  <path d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z"/>
+                              </svg>
+                          </div>
+                            <input [(ngModel)]="phone" name="phone" type="text" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-10 p-2.5"  pattern="^\+375\s?\d{2}\s?\d{3}-?\d{2}-?\d{2}$" placeholder="+375 XX YYY-YY-YY" required>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="mt-8">
+                        <h4 class="text-sm text-gray-500 font-medium">Email</h4>
+                          <div class="mt-6 flex">
+                            <div class="relative w-full ">
+                              <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z"/>
+                                  <path d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z"/>
+                                </svg>
+                                
+                            </div>
+                              <input [(ngModel)]="email" name="email" type="text" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-10 p-2.5" placeholder="qwerty1234@gmail.com" required>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-8">
+                            <button (click)="orderToCart()" class="flex items-center text-gray-700 text-sm font-medium rounded hover:underline focus:outline-none">
+                                <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+                                </svg>
+                                <span class="mx-2">Назад в корзину</span>
+                            </button>
+                            <button (click)="toDelivery()" class="flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-500 focus:outline-none focus:bg-amber-500">
+                                <span>Доставка</span>
+                                <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="isDelivery == true">
+                          <h4 class="text-sm text-gray-500 font-medium">Способ доставки</h4>
+                          <div class="mt-6 ">
+                              <div  (click)="setDeliveryMethod('курьер')"   class="flex items-center cursor-pointer justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                              [ngClass]="{ 'border-amber-500': selectedOption === 'курьер', 'border-gray-300': selectedOption !== 'курьер' }"
+                              (click)="selectedOption = 'курьер'">
+                                  <label class="flex items-center cursor-pointer">
+                                      <input id="bordered-radio-1" type="radio" name="bordered-time" class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                      [checked]="selectedOption === 'курьер'">
+                                      <label for="bordered-radio-1"  class="ml-2 text-sm text-gray-700 cursor-pointer">Курьер</label>
+                                  </label>
+                                </div>
+                                <div class="mt-6"></div>
+                              <div  (click)="setDeliveryMethod('самовывоз')"   class="flex cursor-pointer items-center justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                              [ngClass]="{ 'border-amber-500': selectedOption === 'самовывоз', 'border-gray-300': selectedOption !== 'самовывоз' }"
+                              (click)="selectedOption = 'самовывоз'">
+                                  <label class="flex items-center cursor-pointer">
+                                      <input id="bordered-radio-2" type="radio" name="bordered-time"  class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                      [checked]="selectedOption === 'самовывоз'">
+                                      <label for="bordered-radio-2" class="ml-2 text-sm text-gray-700 cursor-pointer">Самовывоз</label>
+                                  </label>
+                              </div>
+                          </div>
+                      <div *ngIf="selectedOption === 'курьер'" class="mt-8">
+                        <h4 class="text-sm text-gray-500 font-medium">Время доставки</h4>
+                        <div class="mt-6 ">
+                          <div  (click)="setDeliveryMethodData('как можно скорее')"   class="flex items-center cursor-pointer justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                          [ngClass]="{ 'border-amber-500': selectedData === 'как можно скорее', 'border-gray-300': selectedData !== 'как можно скорее' }"
+                          (click)="selectedData = 'как можно скорее'">
+                              <label class="flex items-center cursor-pointer">
+                                  <input id="bordered-radio-1" type="radio" name="bordered-radio" class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                  [checked]="selectedData === 'как можно скорее'">
+                                  <label for="bordered-radio-1"  class="ml-2 text-sm text-gray-700 cursor-pointer">Как можно скорее</label>
+                              </label>
+                            </div>
+                            <div class="mt-6"></div>
+                          <div   (click)="setDeliveryMethodData('дата')"  class="flex cursor-pointer items-center justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                          [ngClass]="{ 'border-amber-500': selectedData === 'дата', 'border-gray-300': selectedData !== 'дата' }"
+                          (click)="selectedData = 'дата'">
+                              <label class="flex items-center cursor-pointer">
+                                  <input id="bordered-radio-2" type="radio" name="bordered-radio"  class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                  [checked]="selectedData === 'дата'">
+                                  <label for="bordered-radio-2" class="ml-2 text-sm text-gray-700 cursor-pointer">Дата</label>
+                              </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="selectedOption === 'самовывоз'" class="mt-8">
+                        <h4 class="text-sm text-gray-500 font-medium">Адрес</h4>
+                        <div class="mt-6 ">
+                          <div     class="flex cursor-pointer items-center justify-between w-full bg-white rounded-md border-2 p-4 focus:outline-none"
+                          [ngClass]="{ 'border-amber-500': selectedAddress === 'г. Быхов, ул. Молодежная, д. 32', 'border-gray-300': selectedAddress !== 'г. Быхов, ул. Молодежная, д. 32' }"
+                          (click)="setPickupAddress('г. Быхов, ул. Молодежная, д. 32')">
+                              <label class="flex items-center cursor-pointer">
+                                  <input id="bordered-radio-2" type="radio" name="bordered-address"  class="form-radio h-5 w-5 accent-amber-600 cursor-pointer"
+                                  [checked]="selectedAddress === 'г. Быхов, ул. Молодежная, д. 32'">
+                                  <label for="bordered-radio-2" class="ml-2 text-sm text-gray-700 cursor-pointer">г. Быхов, ул. Молодежная, д. 32</label>
+                              </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="selectedOption === 'курьер'" class="mt-8">
+                          <h4 class="text-sm text-gray-500 font-medium">Адрес доставки</h4>
+                          <div class="mt-6 flex">
+                            <div class="relative w-full ">
+                              <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                  <path fill-rule="evenodd" d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z" clip-rule="evenodd"/>
+                                </svg>
+                              </div>
+                              <input [(ngModel)]="address" value="" name="address" type="text" id="input-group-1" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-10 p-2.5"  placeholder="г. Минск, ул. Молодежная, д. 58, кв. 392">
+                            </div>
+                          </div>
+                      </div>
+                      <div *ngIf="selectedData === 'дата' && selectedOption === 'курьер'" class="mt-8">
+                          <h4 class="text-sm text-gray-500 font-medium">Дата</h4>
+                          <div class="mt-6 flex">
+                              <label class="block flex-1">
+                                  <input (change)="onDateChange($event)" [min]="minDate" [max]="maxDate" type="date" class="form-input mt-1 block w-full text-gray-700 focus:ring focus:ring-opacity-40 border focus:outline-none focus:border-amber-400 focus:ring-amber-300  rounded-lg">
+                              </label>
+                          </div>
+                      </div>
+                      <div class="flex items-center justify-between mt-8">
+                          <button (click)="deliveryToOrder()" class="flex items-center text-gray-700 text-sm font-medium rounded hover:underline focus:outline-none">
+                              <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+                              </svg>
+                              <span class="mx-2">Назад</span>
+                          </button>
+                          <button (click)="toPayment()" class="flex items-center px-3 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-500 focus:outline-none focus:bg-amber-500">
+                              <span>Оплата</span>
+                              <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                              </svg>
+                          </button>
+                      </div>
+                    </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      </div>
+  </main>
+</div>

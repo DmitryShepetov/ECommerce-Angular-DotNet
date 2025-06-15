@@ -1,0 +1,114 @@
+<app-sidebar></app-sidebar>
+<div class="min-h-full ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+  <div class="relative top-0 h-16 border-b bg-white lg:py-2.5">
+      <div class="px-6 flex items-center justify-between space-x-4 2xl:container">
+          <h5 hidden class="text-2xl text-gray-600 font-medium lg:block">Категории</h5>
+          <button class="w-12 h-16 -mr-2 border-r lg:hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 my-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+          </button>
+
+      </div>
+  </div>
+    <div class="flex flex-wrap justify-center">
+      <div class="w-full px-4">
+        <div *ngIf="categories.length === 0">
+          <p>У вас нет категорий</p>
+        </div>
+        <div *ngIf="categories.length > 0">
+          <section class=" mx-auto">
+            <div class="flex flex-col mt-6">
+                <div class="-ml-4 -my-2 overflow-x-auto sm:-ml-6 lg:-ml-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden border border-gray-200  md:rounded-lg">
+                            <table class="min-w-full border-collapse divide-y divide-gray-200 ">
+                                <thead class="bg-gray-50 ">
+                                    <tr>
+                                        <th scope="col" class="border border-gray-300 px-2 py-3.5 text-sm font-semibold text-gray-500 ">
+                                          <button (click)="toggleSort()" class="flex items-center gap-x-2">Название категории
+                                            <svg *ngIf="sortNameActive == false" class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                              <path fill-rule="evenodd" d="M12.832 3.445a1 1 0 0 0-1.664 0l-4 6A1 1 0 0 0 8 11h8a1 1 0 0 0 .832-1.555l-4-6Zm-1.664 17.11a1 1 0 0 0 1.664 0l4-6A1 1 0 0 0 16 13H8a1 1 0 0 0-.832 1.555l4 6Z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <svg *ngIf="sortDirection === 'asc' && sortNameActive == true" class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                              <path fill-rule="evenodd" d="M18.425 10.271C19.499 8.967 18.57 7 16.88 7H7.12c-1.69 0-2.618 1.967-1.544 3.271l4.881 5.927a2 2 0 0 0 3.088 0l4.88-5.927Z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <svg *ngIf="sortDirection === 'desc' && sortNameActive == true" class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                              <path fill-rule="evenodd" d="M5.575 13.729C4.501 15.033 5.43 17 7.12 17h9.762c1.69 0 2.618-1.967 1.544-3.271l-4.881-5.927a2 2 0 0 0-3.088 0l-4.88 5.927Z" clip-rule="evenodd"/>
+                                            </svg>
+                                          </button></th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                                <span>Описание категории</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-start text-gray-500 ">Действие</th>
+        
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                  <ng-container *ngFor="let category of categories">
+                                    <tr >
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                                          <span *ngIf="!category.isEditing">{{ category.categoryName }}</span>
+                                          <input *ngIf="category.isEditing" [(ngModel)]="category.categoryName" type="text" name="categoryName" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ category.categoryName }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap ">
+                                          <span *ngIf="!category.isEditing">{{ category.desc }}</span>
+                                          <input *ngIf="category.isEditing" [(ngModel)]="category.desc" type="text" name="desc" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ category.desc }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm whitespace-nowrap">
+                                            <div class="flex items-center gap-x-6">
+                                                <button *ngIf="!category.isEditing" (click)="editCategory(category)" class="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
+                                                  <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>                                      
+                                                </button>
+                                                <button (click)="cancelEdit(category)" *ngIf="category.isEditing" class="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none">
+                                                  <i class="fa-solid fa-xmark fa-lg"></i>                                    
+                                                </button>
+                                                <button (click)="saveCategory(category, category.id)" *ngIf="category.isEditing"  class="text-gray-500 transition-colors duration-200   hover:text-green-500 focus:outline-none">
+                                                  <i class="fa-solid fa-check fa-lg"></i>                                     
+                                                </button>
+                                                <button *ngIf="category.isEditing" class="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none" (click)="deleteCategory(category ,category.id)">
+                                                  <i class="fa fa-trash " aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                  </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" (click)="toggleAddCategory()" [ngClass]="{
+                          'bg-red-500 hover:bg-red-600 focus:ring-red-300 dark:focus:ring-red-900': showAddForm,
+                          'bg-amber-400 hover:bg-amber-500 focus:ring-amber-300 dark:focus:ring-amber-900': !showAddForm
+                        }" class="mt-4 ml-1 focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                          {{ showAddForm ? 'Отмена' : 'Добавить категорию' }}
+                        </button>
+                        <form *ngIf="showAddForm" (ngSubmit)="addCategory()" class="mb-4 p-3 border rounded-lg" #categoryForm="ngForm">
+                          <div class="grid gap-6 mb-6 md:grid-cols-2">
+                              <div>
+                                  <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Название категории</label>
+                                  <input #categoryName="ngModel" minlength="2" maxlength="50" [(ngModel)]="newCategory.categoryName" name="name" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  required />
+                                  <div *ngIf="categoryName.invalid && (categoryName.dirty || categoryName.touched)" class="text-red-500 text-xs mt-1">
+                                    <div *ngIf="categoryName.errors?.['required']">Название категории обязательно</div>
+                                    <div *ngIf="categoryName.errors?.['minlength']">Название должно быть не менее 2 символов</div>
+                                    <div *ngIf="categoryName.errors?.['maxlength']">Название должно быть не более 50 символов</div>
+                                  </div>
+                                </div>
+                              <div>
+                                  <label for="desc" class="block mb-2 text-sm font-medium text-gray-900 ">Описание категории</label>
+                                  <input #desc="ngModel" maxlength="500" name="desc" [(ngModel)]="newCategory.desc" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" required />
+                                  <div *ngIf="desc.invalid && (desc.dirty || desc.touched)" class="text-red-500 text-xs mt-1">
+                                    <div *ngIf="desc.errors?.['required']">Описание категории обязательно</div>
+                                    <div *ngIf="desc.errors?.['maxlength']">Описание должно быть не более 500 символов</div>
+                                  </div>
+                                </div>
+                          </div>
+                          <button type="submit" [disabled]="categoryForm.invalid" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 mt-3">Сохранить категорию</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </section>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,139 @@
+  
+  
+  .hero-section {
+    text-align: center;
+    padding: 20px;
+  }
+  .containerss{
+
+
+    min-height: 100%;
+    margin-left: 8%;
+    margin-right: 8%;
+  }
+
+  .swiper_text{
+    position: absolute !important;
+    margin-right: 62%;
+  }
+  .swiper_age_background{
+    background-color: #262626;
+  width: 100px;
+  height: 30px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+  .swiper_age{
+    font-size: 13px;
+    color: #FFFFFF;
+    font-family: "Roboto", sans-serif;
+  }
+
+
+  .category_card.active .category_a {
+    color: #ff9800; /* Цвет для активной категории */
+  }
+  
+  .category_a{
+
+    font-size: 16px;
+    color: #626262;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    border: none; /* Убираем border */
+    background: none;
+    cursor: pointer;
+    &:hover{
+      color: #ff9800;
+    }
+    &:active{
+      color: #ff9800;
+  }
+    &:focus{
+      outline: none;
+    }
+}
+
+  .containerss_category{
+    background-color: #ffffff;
+    height: 100px;
+    display: flex; /* Включить Flexbox */
+    justify-content: space-between; /* Распределить элементы с равным расстоянием */
+    align-items: center; /* Выравнивание элементов по вертикали */
+    gap: 10px; /* Расстояние между элементами */
+  }
+  .lines_contents{
+    border-top: 2px solid #757575;
+    opacity: 0.2;
+  }
+
+  .contentss {
+    padding-bottom: 5%; /* Оставляем место для футера */
+  }
+
+  
+
+  .content-product-card{
+    margin-top: 3%;
+    
+  }
+
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+
+swiper-container {
+  width: 100%;
+}
+
+swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+swiper-slide img {
+
+  width: 100%;
+  object-fit: cover;
+}
+swiper-container::part(button-next),
+swiper-container::part(button-prev) {
+  color: rgb(251 191 36 / var(--tw-bg-opacity, 1))
+}
+swiper-container::part(button-next):hover,
+swiper-container::part(button-prev):hover {
+  color: rgb(245 158 11 / var(--tw-bg-opacity, 1))
+}

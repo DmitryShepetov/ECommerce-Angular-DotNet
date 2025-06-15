@@ -1,0 +1,259 @@
+<app-sidebar></app-sidebar>
+
+
+<div class="min-h-full ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+  <div class="relative top-0 h-16 border-b bg-white lg:py-2.5">
+      <div class="px-6 flex items-center justify-between space-x-4 2xl:container">
+          <h5 hidden class="text-2xl text-gray-600 font-medium lg:block">Товары</h5>
+          <button class="w-12 h-16 -mr-2 border-r lg:hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 my-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+          </button>
+
+      </div>
+  </div>
+    <div class="flex flex-wrap justify-center">
+      <div class="w-full px-4">
+        <div *ngIf="categories.length === 0">
+          <p>У вас нет товара</p>
+        </div>
+        <div *ngIf="categories.length > 0">
+          <section class=" mx-auto">
+            <div class="flex flex-col mt-6">
+                <div class="-ml-4 -my-2 overflow-x-auto sm:-ml-6 lg:-ml-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden border border-gray-200  md:rounded-lg">
+                          <!-- divide-y  divide-gray-200  -->
+                            <table class="min-w-full border-collapse">
+                                <thead class="bg-gray-50 ">
+                                    <tr>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                                <span>Фото</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 px-2 py-3.5 text-sm font-semibold text-gray-500 ">
+                                          <button (click)="toggleSort()" class="flex items-center gap-x-2">Название товара
+                                            <svg *ngIf="sortNameActive == false" class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                              <path fill-rule="evenodd" d="M12.832 3.445a1 1 0 0 0-1.664 0l-4 6A1 1 0 0 0 8 11h8a1 1 0 0 0 .832-1.555l-4-6Zm-1.664 17.11a1 1 0 0 0 1.664 0l4-6A1 1 0 0 0 16 13H8a1 1 0 0 0-.832 1.555l4 6Z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <svg *ngIf="sortDirection === 'asc' && sortNameActive == true" class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                              <path fill-rule="evenodd" d="M18.425 10.271C19.499 8.967 18.57 7 16.88 7H7.12c-1.69 0-2.618 1.967-1.544 3.271l4.881 5.927a2 2 0 0 0 3.088 0l4.88-5.927Z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <svg *ngIf="sortDirection === 'desc' && sortNameActive == true" class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                              <path fill-rule="evenodd" d="M5.575 13.729C4.501 15.033 5.43 17 7.12 17h9.762c1.69 0 2.618-1.967 1.544-3.271l-4.881-5.927a2 2 0 0 0-3.088 0l-4.88 5.927Z" clip-rule="evenodd"/>
+                                            </svg>
+                                          </button></th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Короткое описание</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Длинное описание</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Срок годности</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                                <span>Цена</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Цена за</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>БЖУ</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Избранный товар</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Новый товар</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>В наличии</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-start text-gray-500 ">
+                                          <span>Категория</span>
+                                        </th>
+                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-start text-gray-500 ">Действие</th>
+        
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                  <ng-container *ngFor="let product of honey">
+                                    <tr >
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-pre-wrap">
+                                          <img *ngIf="!product.isEditing" alt="..." [src]="'https://localhost:5001' + product?.imageUrl" alt="{{ product.name }}" class="cart-img">
+                                          <div *ngIf="product.isEditing" class="flex items-center justify-center cursor-pointer w-full">
+                                              <label for="dropzone-file" 
+                                              class="shadow-xl group cursor-pointer rounded-full align-middle border-none">
+                                                <img alt="..." [src]="'https://localhost:5001' + product?.imageUrl" class="shadow-xl align-middle border-2 bg-gray-200 border-gray-400 hover:border-gray-600 brightness-90 hover:brightness-75 border-dashed cart-img">       
+                                                <input (change)="onFileSelected($event)" id="dropzone-file" type="file" class="hidden">                          
+                                            </label>
+                                          </div>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.name }}</span>
+                                          <input *ngIf="product.isEditing" [(ngModel)]="product.name" type="text" name="name" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.name }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.shortDesc }}</span>
+                                          <input *ngIf="product.isEditing" [(ngModel)]="product.shortDesc" type="text" name="shortDesc" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.shortDesc }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.longDesc }}</span>
+                                          <textarea *ngIf="product.isEditing" [(ngModel)]="product.longDesc" name="longDesc" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.longDesc }}" required></textarea>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.shelfLife }}</span>
+                                          <input *ngIf="product.isEditing" [(ngModel)]="product.shelfLife" type="text" name="shelfLife" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.shelfLife }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.price }}</span>
+                                          <input *ngIf="product.isEditing" [(ngModel)]="product.price" type="number" name="price" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.price }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.priceType }}</span>
+                                          <input *ngIf="product.isEditing" [(ngModel)]="product.priceType" type="number" name="price" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.price }}" required>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.bju }}</span>
+                                          <textarea *ngIf="product.isEditing" [(ngModel)]="product.bju" name="bju" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  placeholder="{{ product.bju }}" required></textarea>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <input *ngIf="product.isEditing" class="form-check-input me-1" type="checkbox" [(ngModel)]="product.isFavorite">
+                                          <input *ngIf="!product.isEditing" class="form-check-input me-1" type="checkbox" disabled [checked]="product.isFavorite">
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <input *ngIf="product.isEditing" class="form-check-input me-1" type="checkbox" [(ngModel)]="product.newHoney">
+                                          <input *ngIf="!product.isEditing" class="form-check-input me-1" type="checkbox" disabled [checked]="product.newHoney">
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <input *ngIf="product.isEditing" class="form-check-input me-1" type="checkbox" [(ngModel)]="product.avaliable">
+                                          <input *ngIf="!product.isEditing" class="form-check-input me-1" type="checkbox" disabled [checked]="product.avaliable">
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">
+                                          <span *ngIf="!product.isEditing">{{ product.categories.categoryName }}</span>
+                                          <select *ngIf="product.isEditing" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" [(ngModel)]="product.Categoryid" name="CategoryId" required>
+                                            <option *ngFor="let category of categories" [value]="category.id">{{ category.categoryName }}</option>
+                                          </select>
+                                        </td>
+                                        <td class="border border-gray-300 px-4 py-4 text-sm whitespace-nowrap">
+                                            <div class="flex items-center gap-x-6">
+                                                <button *ngIf="!product.isEditing" (click)="editProduct(product)" class="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
+                                                  <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>                                      
+                                                </button>
+                                                <button (click)="cancelEdit(product)" *ngIf="product.isEditing" class="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none">
+                                                  <i class="fa-solid fa-xmark fa-lg"></i>                                    
+                                                </button>
+                                                <button (click)="saveProduct(product, product.id)" *ngIf="product.isEditing"  class="text-gray-500 transition-colors duration-200   hover:text-green-500 focus:outline-none">
+                                                  <i class="fa-solid fa-check fa-lg"></i>                                     
+                                                </button>
+                                                <button *ngIf="product.isEditing" class="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none" (click)="deleteProduct(product ,product.id)">
+                                                  <i class="fa fa-trash " aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                  </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" (click)="toggleAddProduct()" [ngClass]="{
+              'bg-red-500 hover:bg-red-600 focus:ring-red-300 dark:focus:ring-red-900': showAddForm,
+              'bg-amber-400 hover:bg-amber-500 focus:ring-amber-300 dark:focus:ring-amber-900': !showAddForm
+            }" class="mt-4 ml-1 focus:outline-none text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+              {{ showAddForm ? 'Отмена' : 'Добавить товар' }}
+            </button>
+            <form *ngIf="showAddForm" (ngSubmit)="addProduct()" class="mb-4 p-3 border rounded-lg">
+              <div class="grid gap-6 mb-6 md:grid-cols-2">
+                  <div>
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Изображение товара</label>
+                    <div class="flex items-center justify-center cursor-pointer w-full">
+                      <label *ngIf="newProduct?.imageUrl != ''" for="dropzone-file" class="shadow-xl h-64  group cursor-pointer rounded-full align-middle border-none">
+                          <img alt="..." [src]="'https://localhost:5001' + newProduct.imageUrl" class="shadow-xl align-middle border-2 bg-gray-200 border-gray-400 hover:border-gray-600 brightness-90 hover:brightness-75 border-dashed w-full h-full">       
+                          <input id="dropzone-file" type="file" class="hidden">                          
+                      </label>
+                      <label *ngIf="newProduct?.imageUrl == ''" for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 ">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Нажмите, чтобы загрузить</span> или перетащите и отпустите</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">PNG или JPG (min. 800x800px)</p>
+                        </div>
+                        <input (change)="onFileSelected($event)" id="dropzone-file" type="file" class="hidden" />
+                    </label>
+                    </div>
+                  </div>
+                  <div>
+                      <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Название товара</label>
+                      <input [(ngModel)]="newProduct.name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5"  required />
+                      <div *ngIf="formErrors.name" class="text-red-500 text-xs mt-1">{{ formErrors.name }}</div>
+                    </div>
+                  <div>
+                      <label for="shortDesc" class="block mb-2 text-sm font-medium text-gray-900 ">Короткое описание</label>
+                      <input name="shortDesc" [(ngModel)]="newProduct.shortDesc" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" required />
+                      <div *ngIf="formErrors.shortDesc" class="text-red-500 text-xs mt-1">{{ formErrors.shortDesc }}</div>
+                    </div>
+                  <div>
+                    <label for="longDesc" class="block mb-2 text-sm font-medium text-gray-900 ">Длинное описание</label>
+                    <textarea name="longDesc" [(ngModel)]="newProduct.longDesc" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" required></textarea>
+                    <div *ngIf="formErrors.longDesc" class="text-red-500 text-xs mt-1">{{ formErrors.longDesc }}</div>
+                  </div>
+                <div>
+                  <label for="bju" class="block mb-2 text-sm font-medium text-gray-900 ">БЖУ</label>
+                  <textarea name="bju" [(ngModel)]="newProduct.bju" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" required></textarea>
+                  <div *ngIf="formErrors.bju" class="text-red-500 text-xs mt-1">{{ formErrors.bju }}</div>
+                </div>
+                <div>
+                  <label for="price" class="block mb-2 text-sm font-medium text-gray-900 ">Цена</label>
+                  <input name="price" [(ngModel)]="newProduct.price" type="number" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" required />
+                  <div *ngIf="formErrors.price" class="text-red-500 text-xs mt-1">{{ formErrors.price }}</div>
+                </div>
+                <div>
+                  <label for="shelfLife" class="block mb-2 text-sm font-medium text-gray-900 ">Срок годности</label>
+                  <input name="shelfLife" [(ngModel)]="newProduct.shelfLife" class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" required />
+                  <div *ngIf="formErrors.shelfLife" class="text-red-500 text-xs mt-1">{{ formErrors.shelfLife }}</div>
+                </div>
+                <div>
+                  <label for="isFavorite" class="block mb-2 text-sm font-medium text-gray-900 ">Избранный товар</label>
+                  <input name="isFavorite" [(ngModel)]="newProduct.isFavorite" type="checkbox" class="form-check-input me-1" required />
+                </div>
+                <div>
+                  <label for="newHoney" class="block mb-2 text-sm font-medium text-gray-900 ">Новый товар</label>
+                  <input name="newHoney" [(ngModel)]="newProduct.newHoney" type="checkbox" class="form-check-input me-1" required />
+                </div>
+                <div>
+                  <label for="avaliable" class="block mb-2 text-sm font-medium text-gray-900 ">В наличии</label>
+                  <input name="avaliable" [(ngModel)]="newProduct.avaliable" type="checkbox" class="form-check-input me-1" required />
+                </div>
+                <div>
+                  <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Категория</label>
+                  <select class="bg-gray-50 border border-gray-300 text-gray-900  focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" [(ngModel)]="newProduct.Categoryid" name="CategoryId" required>
+                    <option value=0 disabled selected>Выберите название категории</option> 
+                    <option *ngFor="let category of categories" [value]="category.id">{{ category.categoryName }}</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="priceUnit" class="block mb-2 text-sm font-medium text-gray-900">Цена за объем</label>
+                  <select 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 text-sm rounded-lg block w-full ps-5 p-2.5" 
+                    [(ngModel)]="newProduct.priceType" 
+                    name="priceUnit" 
+                    required
+                  >
+                    <option value="" disabled selected>Выберите единицу измерения</option> <!-- Пустой вариант по умолчанию -->
+                    <option *ngFor="let unit of priceTypes" [value]="unit">{{ unit }}</option> <!-- Динамические варианты -->
+                  </select>
+                  <div *ngIf="formErrors.priceType" class="text-red-500 text-xs mt-1">{{ formErrors.priceType }}</div>
+                </div>
+              </div>
+              <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 mt-3">Сохранить товар</button>
+            </form>
+          </section>
+        </div>
+    </div>
+  </div>
+</div>

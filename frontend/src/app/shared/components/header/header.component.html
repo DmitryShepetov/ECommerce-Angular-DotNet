@@ -1,0 +1,204 @@
+  <!-- <header>
+    <nav class=" bg-white border-gray-200 px-4 lg:px-6 py-2.5 ">
+        <div class="flex flex-wrap justify-between items-center mx-auto header_div">
+            <a [routerLink]="''" class="flex items-center">
+                <img src="assets/icons8-мед-48.png" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
+                <span class="self-center text-xl me-1 font-bold whitespace-nowrap">Honey</span>
+                <span class="self-center text-xl font-bold whitespace-nowrap text-amber-500">House</span>
+            </a>
+            <div class="flex items-center lg:order-2">
+                <div class="flex mr-4">
+                  <div class="relative hidden md:block">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                      <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                      </svg>
+                      <span class="sr-only">Search icon</span>
+                    </div>
+                    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" id="search-navbar" class="block w-full p-2 ps-10 outline-none text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-amber-500 focus:border-amber-500 focus:border-2" placeholder="Поиск...">
+                    <div *ngIf="searchQuery.trim() !== ''" class="absolute md:block bg-white shadow-lg rounded-lg top-full left-0 max-h-64 overflow-y-auto z-[45]">
+                      <div (click)="openProductModal(product.id, $event)" *ngFor="let product of filteredProducts" class="flex p-2 hover:bg-gray-200 cursor-pointer">
+                        <img class="object-cover h-5 w-5 mr-2" [src]="'https://localhost:5001' + product?.imageUrl" alt="{{ product.name }}">
+                        <span class="border-r-2 border-gray-300 mr-2 "></span>
+                        <h3>{{ product.name }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="flex justify-center mr-2 md:block">
+                <a class="relative text-gray-700 transition-colors duration-300 transform  hover:text-amber-500" [routerLink]="'/cart'">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span *ngIf="cartItemCount > 0" class="absolute top-0 right-0 w-5 h-5 flex items-center transform translate-x-1/2 -translate-y-1/2 justify-center text-xs text-white bg-red-500 rounded-full">{{ cartItemCount }}</span>
+                </a>
+              </div>
+              <div (click)="toggleDropdown($event)" class="ml-4" *ngIf="isLogginIn == true">
+                      <img id="avatarButton" type="button" class="w-10 h-10 rounded-full cursor-pointer" [src]="'https://localhost:5001/api/auth/profile-image/' + image" (error)="handleImageError($event)" alt="User dropdown">
+                      <div class="cursor-default px-4 py-3 text-sm text-gray-900 ">
+                      <div class="flex">
+                        <div class="mr-2">{{ firstName }}</div>
+                        <div>{{ lastName }}</div>  
+                      </div>
+                      <div class="font-medium truncate">{{ email }}</div>
+                    </div>
+                    <div class="border-t border-gray-200 my-1"></div>
+                    <ul class="pt-2  text-gray-700 " aria-labelledby="avatarButton">
+                      <li>
+                        <a (click)="onProfile()" class="block cursor-pointer px-4 py-2 hover:bg-gray-200 ">Мой профиль</a>
+                      </li>
+                      <li>
+                        <a *ngIf="role === 'Admin'" [routerLink]="['/dashboard']" class="block cursor-pointer px-4 py-2 hover:bg-gray-200 ">Админ панель</a>
+                      </li>
+                      <li class="border-t border-gray-200">
+                        <a (click)="logOut()" class="block cursor-pointer px-4 py-2 text-gray-700 hover:bg-gray-200 ">Выйти</a>
+                      </li>
+                      <li class="border-t border-gray-200">
+                        <a (click)="logOutAll()" class="block cursor-pointer px-4 py-2 text-gray-700 hover:bg-red-200 hover:rounded-b-lg">Выйти со всех устройств</a>
+                      </li>
+                    </ul>
+                </div>
+              </div>
+              <a *ngIf="isLogginIn == false" (click)="onLogin()" class="text-gray-800 cursor-pointer lg:hover:text-amber-500 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2  focus:outline-none ">Вход</a>
+              <a *ngIf="isLogginIn == false" (click)="onRegister()" class="text-white cursor-pointer bg-amber-500 hover:bg-amber-600 focus:ring-4 focus:ring-amber-400 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none">Регистрация</a>
+            </div>
+    </nav>
+    <hr class=" border-gray-200" />
+</header> -->
+<nav class=" bg-white border-gray-200 px-4 lg:px-6 py-2.5 ">
+<div class="flex flex-wrap justify-between items-center mx-auto header_div">
+  <a [routerLink]="''" class="flex items-center">
+    <img src="assets/icons8-мед-48.png" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
+    <span class="self-center text-xl me-1 font-bold whitespace-nowrap">Honey</span>
+    <span class="self-center text-xl font-bold whitespace-nowrap text-amber-500">House</span>
+  </a>
+
+  <div class="flex items-center lg:order-2">
+    <div class="relative hidden md:block mr-4">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+        </svg>
+        <span class="sr-only">Search icon</span>
+      </div>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()"
+        id="search-navbar"
+        class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-amber-500 focus:border-amber-500 focus:border-2 outline-none"
+        placeholder="Поиск..."
+      />
+      <div
+        *ngIf="searchQuery.trim() !== ''"
+        class="absolute bg-white shadow-lg rounded-lg top-full left-0 w-full max-h-64 overflow-y-auto z-50"
+      >
+        <div
+          (click)="openProductModal(product.id, $event)"
+          *ngFor="let product of filteredProducts"
+          class="flex p-2 hover:bg-gray-200 cursor-pointer"
+        >
+          <img
+            class="object-cover h-5 w-5 mr-2"
+            [src]="'https://localhost:5001' + product?.imageUrl"
+            alt="{{ product.name }}"
+          />
+          <span class="border-r-2 border-gray-300 mr-2"></span>
+          <h3>{{ product.name }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative flex items-center mr-4">
+      <a
+        class="relative text-gray-700 transition-colors duration-300 transform hover:text-amber-500"
+        [routerLink]="'/cart'"
+      >
+        <svg
+          class="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span
+          *ngIf="cartItemCount > 0"
+          class="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-xs text-white bg-red-500 rounded-full transform translate-x-1/2 -translate-y-1/2"
+          >{{ cartItemCount }}</span
+        >
+      </a>
+    </div>
+
+    <div *ngIf="isLogginIn" class="relative ml-4">
+      <img
+        id="avatarButton"
+        (click)="toggleDropdown($event)"
+        class="w-10 h-10 rounded-full cursor-pointer"
+        [src]="'https://localhost:5001/api/auth/profile-image/' + image"
+        (error)="handleImageError($event)"
+        alt="User dropdown"
+      />
+      <div
+        *ngIf="isDropdownOpen"
+        class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-lg shadow-lg z-50"
+      >
+        <div class="cursor-default px-4 py-3 text-sm text-gray-900">
+          <div class="flex">
+            <div class="mr-2">{{ firstName }}</div>
+            <div>{{ lastName }}</div>
+          </div>
+          <div class="font-medium truncate">{{ email }}</div>
+        </div>
+        <div class="border-t border-gray-200 my-1"></div>
+        <ul class="pt-2 text-gray-700" aria-labelledby="avatarButton">
+          <li>
+            <a (click)="onProfile()" class="block cursor-pointer px-4 py-2 hover:bg-gray-200"
+              >Мой профиль</a
+            >
+          </li>
+          <li>
+            <a
+              *ngIf="role === 'Admin'"
+              [routerLink]="['/dashboard']"
+              class="block cursor-pointer px-4 py-2 hover:bg-gray-200"
+              >Админ панель</a
+            >
+          </li>
+          <li class="border-t border-gray-200">
+            <a (click)="logOut()" class="block cursor-pointer px-4 py-2 text-gray-700 hover:bg-gray-200"
+              >Выйти</a
+            >
+          </li>
+          <li class="border-t border-gray-200">
+            <a
+              (click)="logOutAll()"
+              class="block cursor-pointer px-4 py-2 text-gray-700 hover:bg-red-200 hover:rounded-b-lg"
+              >Выйти со всех устройств</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!isLogginIn">
+      <a
+        (click)="onLogin()"
+        class="text-gray-800 cursor-pointer hover:text-amber-500 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+        >Вход</a
+      >
+      <a
+        (click)="onRegister()"
+        class="text-white cursor-pointer bg-amber-500 hover:bg-amber-600 focus:ring-4 focus:ring-amber-400 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+        >Регистрация</a
+      >
+    </ng-container>
+  </div>
+</div>
+</nav>

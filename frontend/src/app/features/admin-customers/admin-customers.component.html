@@ -1,0 +1,79 @@
+<app-sidebar></app-sidebar>
+<div class="min-h-full ml-auto mb-6 mt-5 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+    <section class="container pr-4 mx-auto">
+        <div class="flex items-center gap-x-3">
+            <h2 class="text-lg font-medium text-gray-800 dark:text-white">Члены команды</h2>
+    
+            <span class="px-3 py-1 text-xs text-amber-600 bg-amber-100 rounded-full">{{ users?.length || 0 }} <span *ngIf="users.length < 5">сотрудника</span> <span *ngIf="users.length >= 5">сотрудников</span></span>
+        </div>
+        <div class="flex flex-col mt-6">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800">
+                                <tr>
+                                    <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <div class="flex items-center gap-x-3">
+                                            <span>Имя</span>
+                                        </div>
+                                    </th>
+    
+                                    <th scope="col" class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <button class="flex items-center gap-x-2">
+                                            <span>Статус</span>
+                                        </button>
+                                    </th>
+    
+                                    <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <button class="flex items-center gap-x-2">
+                                            <span>Роль</span>
+                                        </button>
+                                    </th>
+    
+                                    <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">Email адрес</th>
+
+                                    <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">Номер телефона</th>
+
+                                    <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">Команда</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                                <tr *ngFor="let user of users; let i= index">
+                                    <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                        <div class="inline-flex items-center gap-x-3">
+    
+                                            <div class="flex items-center gap-x-2">
+                                                <div>
+                                                    <h2 class="font-medium text-gray-800 dark:text-white ">{{ user.firstName }} {{ user.lastName }}</h2>
+                                                    <p class="text-sm font-normal text-gray-600 dark:text-gray-400">{{ user.username }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-emerald-100/60 dark:bg-gray-800">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+    
+                                            <h2 class="text-sm font-normal text-emerald-500">Active</h2>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{{ user.role }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{{ user.email }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{{ user.phone }}</td>
+                                    <td class="px-4 py-4 text-sm whitespace-nowrap">
+                                        <div class="flex items-center gap-x-2">
+                                            <p class="px-3 py-1 text-xs text-indigo-500 rounded-full  bg-indigo-100/60">Design</p>
+                                            <p class="px-3 py-1 text-xs text-blue-500 rounded-full  bg-blue-100/60">Product</p>
+                                            <p class="px-3 py-1 text-xs text-pink-500 rounded-full  bg-pink-100/60">Marketing</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

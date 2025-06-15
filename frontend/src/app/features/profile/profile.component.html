@@ -1,0 +1,163 @@
+<div>
+<div class="w-full">
+  <section class="relative block h-[500px]">
+    <div class="absolute top-0 w-full h-full bg-gradient-to-r from-amber-300 to-amber-400">
+      <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black"></span>
+    </div>
+
+  </section>
+  <section class="relative min-h-[500px] py-16 bg-gray-200">
+    <div class="profileHistory mx-auto px-4">
+      <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+        <div class="px-6">
+          <form (ngSubmit)="onUpdateProfile()">
+          <div class="flex flex-wrap justify-center">
+            <div class="w-full  px-4 lg:order-1 flex justify-center">
+              <div class="absolute w-[150px] h-[150px] ">
+                <img *ngIf="isChanged == false" alt="..." [src]="'https://localhost:5001/api/auth/profile-image/' + image" (error)="handleImageError($event)" class="absolute -top-16 lg:-top-20 left-0 object-cover w-full h-full rounded-full">
+                <div *ngIf="isChanged == true" class="flex items-center justify-center cursor-pointer w-full">
+                   <label for="dropzone-file" 
+                   class="group cursor-pointer">
+                      <img alt="..." [src]="'https://localhost:5001/api/auth/profile-image/' + image" (error)="handleImageError($event)" class="shadow-xl align-middle border-2 bg-gray-200 border-gray-400 group-hover:border-gray-600 brightness-90 group-hover:brightness-75 border-dashed absolute -top-16 lg:-top-20 left-0 object-cover w-full h-full rounded-full">       
+                      <svg class="w-8 h-8 cursor-pointer group-hover:text-gray-400 text-gray-200 absolute -top-[70px] -right-1 z-10" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M7.5 4.586A2 2 0 0 1 8.914 4h6.172a2 2 0 0 1 1.414.586L17.914 6H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h1.086L7.5 4.586ZM10 12a2 2 0 1 1 4 0 2 2 0 0 1-4 0Zm2-4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" clip-rule="evenodd"/>
+                      </svg>
+                      <input (change)="onFileSelected($event)" id="dropzone-file" type="file" class="absolute inset-0 -top-16 lg:-top-20 w-full h-full opacity-0 cursor-pointer">                          
+                  </label>
+               </div>
+              </div>
+            </div>
+            <div class="w-full px-4 lg:order-2 lg:text-right lg:self-center">
+              <div class="py-6 px-3 mt-32 sm:mt-0">
+                <button type="button" (click)="toggleUpdateProfile()" [ngClass]="{
+                  'bg-red-500 hover:bg-red-600 focus:ring-red-300 ': isChanged,
+                  'bg-amber-500 hover:bg-amber-600 focus:ring-amber-400': !isChanged
+                }" class="text-white uppercase font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
+                  {{ isChanged ? 'Отменить' : 'Изменить' }}
+                </button>
+                <button *ngIf="isChanged == true" class="hover:text-amber-500 focus:text-amber-600" type="submit">
+                  <i class="fa-solid fa-check "></i>
+                </button>
+                
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-12">
+            <h3 class="text-4xl font-semibold leading-normal text-gray-700 mb-2">
+              <span *ngIf="isChanged == false">{{ firstName }} {{ lastName }}</span>
+              
+              <input *ngIf="isChanged == true" id="firstName" [(ngModel)]="firstName" name="firstName" class="w-[9%] mr-3 text-xl focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 rounded-lg p-2 border" required />
+              <input *ngIf="isChanged == true" id="lastName" [(ngModel)]="lastName" name="lastName" class="w-[9%] text-xl focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 rounded-lg p-2 border" required />
+            </h3>
+            <div class="text-sm leading-normal mt-0 mb-2 text-gray-400 font-bold uppercase">
+              <i class="fa-solid fa-calendar mr-2 text-lg text-gray-400"></i>
+              <span>{{ date }}</span>
+            </div>
+            <div class="mb-2 text-gray-600 mt-10">
+              <i class="fa-solid fa-phone mr-2 text-lg text-gray-400"></i><span >{{ phone }}</span>
+            </div>
+
+            <div class="mb-2 text-gray-600">
+              <i class="fa-solid fa-envelope mr-2 text-lg text-gray-400"></i><span *ngIf="isChanged == false">{{ email }}</span><input *ngIf="isChanged == true" id="email" [(ngModel)]="email" type="email" name="email" class=" focus:ring focus:ring-opacity-40 focus:outline-none focus:border-amber-400 focus:ring-amber-300 rounded-lg p-2 border" required />
+            </div>
+          </div>
+        </form>
+          <div class="mt-10 py-10 border-t border-gray-200 text-center">
+            <div class="flex flex-wrap justify-center">
+              <div class="w-full px-4">
+                <h2 class="text-gray-700 font-semibold">История заказов</h2>
+  
+                <div *ngIf="orders.length === 0" class="empty-cart">
+                  <p>Ваша история заказов пуста.</p>
+                </div>
+                <div *ngIf="orders.length > 0">
+                  <section class=" mx-auto">
+                    <div class="flex flex-col mt-6">
+                        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                <div class="overflow-hidden border border-gray-200  md:rounded-lg">
+                                    <table class="min-w-full border-collapse divide-y divide-gray-200 ">
+                                        <thead class="bg-gray-50 ">
+                                            <tr>
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Номер заказа</th>
+                                                <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                        <span>Заказ</span>
+                                                </th>
+                
+                                                <th scope="col" class="border border-gray-300 px-12 py-3.5 text-sm font-semibold text-lecenterft rtl:text-center text-gray-500 ">
+                                                        <span>Адрес заказа</span>
+                                                </th>
+                
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                        <span>Email</span>
+                                                </th>
+                
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Способ доставки</th>
+                
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Способ оплаты</th>
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Итого</th>
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Статус</th>
+                                                <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Действие</th>
+                
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                          <ng-container *ngFor="let order of orders">
+                                            <tr >
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ order.id }}</td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                                                  <thead>
+                                                      <tr>
+                                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Фото</th>
+                                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Название</th>
+                                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Цена</th>
+                                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Количество</th>
+                                                        <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Итого</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tr  *ngFor="let item of order.items">
+                                                      <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-nowrap"><img [src]="'https://localhost:5001' + item.imageUrl" alt="{{ order.name }}" class="cart-img"></td>
+                                                      <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.name }}</td>
+                                                      <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.price | currency:'₽':'symbol':'1.2-2' }}</td>
+                                                      <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-pre-wrap">{{ item.quantity }}</td>
+                                                      <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ (item.price * item.quantity) | currency:'₽':'symbol':'1.2-2' }}</td>
+                                                  </tr>
+                                              </td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">{{ order.adress }}</td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">{{ order.email }}</td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">{{ order.deliveryMethod }}</td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">{{ order.paymentMethod }}</td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-pre-wrap">{{ order.totalPrice }} р.</td>
+                                                <td class="border border-gray-300 px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                                    <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2" [ngClass]="order.statusHistory?.length ? getStatusClass(order.statusHistory[order.statusHistory.length - 1]?.status) : ''">
+                
+                                                        <h2 class="text-sm font-normal" [ngClass]="order.statusHistory?.length ? getStatusClass(order.statusHistory[order.statusHistory.length - 1]?.status) : ''">{{ order.statusHistory?.length ? order.statusHistory[order.statusHistory.length - 1]?.status : 'Статус неизвестен' }}</h2>
+                                                    </div>
+                                                </td>
+                                                <td class="border border-gray-300 px-4 py-4 text-sm whitespace-nowrap">
+                                                    <div class="flex items-center gap-x-6">
+                                                        <button (click)="detailed(order.id)" class="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
+                                                          <svg class="w-6 h-6"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                          </svg>                                          
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                          </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

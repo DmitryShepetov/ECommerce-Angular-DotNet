@@ -1,0 +1,117 @@
+<section class="bg-white">
+    <div class="container px-6 py-10 mx-auto">
+        <h1 class="text-2xl text-center font-semibold text-gray-800 lg:text-3xl">Часто Задаваемые Вопросы</h1>
+
+        <hr class="my-6 border-gray-200 dark:border-gray-700">
+
+        <div>
+            <div>
+                <button (click)="isOpenOne = !isOpenOne" class="flex items-center w-full focus:outline-none">
+                    <svg *ngIf="isOpenOne" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                    </svg>
+                    <svg *ngIf="!isOpenOne" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+
+                    <h1 class="mx-4 text-xl text-gray-700">Изображения товаров</h1>
+                </button>
+                <div *ngIf="isOpenOne" class="flex mt-8 md:mx-10">
+                    <span class="border border-amber-500"></span>
+
+                    <p class="max-w-3xl px-4 text-gray-500">
+                        Все изображения товаров в на сайте носят исключительно рекламный характер
+                    </p>
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-200">
+
+            <div>
+                <button (click)="isOpenTwo = !isOpenTwo" class="flex items-center w-full focus:outline-none">
+                    <svg *ngIf="isOpenTwo" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                    </svg>
+                    <svg *ngIf="!isOpenTwo" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+
+                    <h1 class="mx-4 text-xl text-gray-700">Что мне делать, если в моем заказе отсутствуют товары или есть ошибка в заказе?</h1>
+                </button>
+                <div *ngIf="isOpenTwo" class="flex mt-8 md:mx-10">
+                    <span class="border border-amber-500"></span>
+
+                    <p class="max-w-3xl px-4 text-gray-500">
+                        Позвоните в наш контакт-центр по телефону +375 (29) 198-00-67 и проинформируйте нашего оператора о недостающих продуктах.
+                    </p>
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-200">
+
+            <div>
+                <button (click)="isOpenThree = !isOpenThree" class="flex items-center w-full focus:outline-none">
+                    <svg *ngIf="isOpenThree" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                    </svg>
+                    <svg *ngIf="!isOpenThree" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+
+                    <h1 class="mx-4 text-xl text-gray-700">Нужно ли мне регистрироваться, чтобы заказать онлайн?</h1>
+                </button>
+                <div *ngIf="isOpenThree" class="flex mt-8 md:mx-10">
+                    <span class="border border-amber-500"></span>
+
+                    <p class="max-w-3xl px-4 text-gray-500">
+                        Нет, заказ можно сделать БЕЗ регистрации на нашем сайте, при оформлении заказа нам понядобятся такие данные как ваше имя, фамилия, телефон и адрес электронной почты. 
+                    </p>
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-200">
+
+            <div>
+                <button (click)="isOpenFour = !isOpenFour" class="flex items-center w-full focus:outline-none">
+                    <svg *ngIf="isOpenFour" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                    </svg>
+                    <svg *ngIf="!isOpenFour" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+
+                    <h1 class="mx-4 text-xl text-gray-700">Сколько времени занимает доставка заказа?</h1>
+                </button>
+                <div *ngIf="isOpenFour" class="flex mt-8 md:mx-10">
+                    <span class="border border-amber-500"></span>
+
+                    <p class="max-w-3xl px-4 text-gray-500">
+                        Время доставки зависит от вашего местоположения и обычно составляет от 1 до 3 дней. Мы всегда стремимся сделать процесс максимально быстрым и удобным для вас!
+                    </p>
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-200">
+
+            <div class="mb-5">
+                <button (click)="isOpenFive = !isOpenFive" class="flex items-center w-full focus:outline-none">
+                    <svg *ngIf="isOpenFive" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                    </svg>
+                    <svg *ngIf="!isOpenFive" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+
+                    <h1 class="mx-4 text-xl text-gray-700">Как узнать статус моего заказа?</h1>
+                </button>
+                <div *ngIf="isOpenFive" class="flex mt-8 md:mx-10">
+                    <span class="border border-amber-500"></span>
+
+                    <p class="max-w-3xl px-4 text-gray-500">
+                        Вы можете отследить статус вашего заказа в личном кабинете на нашем сайте. Просто войдите в учетную запись и выберите нужный заказ.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,142 @@
+ <section class="bg-white ">
+    <div class="container flex items-center justify-center min-h-screen px-6 mx-auto">
+        <form class="w-full max-w-md"  [formGroup]="singUpForm" (ngSubmit)="onSignup()">
+            <div class="flex items-center justify-center mr-10">
+                <img class="mr-2 w-auto h-7 sm:h-8" src="assets/icons8-мед-48.png" alt="">
+                <h1 class="text-2xl font-semibold text-gray-800 capitalize sm:text-3xl ">Регистрация</h1>
+            </div>
+            <div class="relative flex items-center mt-8">
+                <span class="absolute">
+                    <svg [ngClass]="{' text-red-700': username?.invalid && username?.dirty}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mx-3 text-gray-300 ">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>                      
+                </span>
+                <input [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': username?.invalid && username?.dirty}" formControlName="username" type="text" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Имя пользователя">
+            </div>
+            <div *ngIf="username?.invalid && username?.dirty" class="mt-2 text-sm font-medium text-red-600">
+                <p *ngIf="username?.errors?.['required']">*Имя пользователя обязательно</p>
+                <p *ngIf="username?.errors?.['minlength']">*Минимум 2 символа</p>
+                <p *ngIf="username?.errors?.['maxlength']">*Максимум 30 символов</p>
+                <p *ngIf="username?.errors?.['pattern']">*Только буквы латиницей, цифры и подчеркивание</p>
+            </div>
+
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                      <svg [ngClass]="{' text-red-700': firstName?.invalid && firstName?.dirty}" class="w-6 h-6 mx-3 text-gray-300 " xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M7 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h1m4-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm7.441 1.559a1.907 1.907 0 0 1 0 2.698l-6.069 6.069L10 19l.674-3.372 6.07-6.07a1.907 1.907 0 0 1 2.697 0Z"/>
+                    </svg>
+                </span>
+                <input [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': firstName?.invalid && firstName?.dirty}" formControlName="firstName" type="text" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Имя">
+            </div>
+            <div *ngIf="firstName?.invalid && firstName?.dirty" class="mt-2 text-sm text-red-600 font-medium">
+                <p *ngIf="firstName?.errors?.['required']">*Имя обязательно</p>
+                <p *ngIf="firstName?.errors?.['minlength']">*Минимум 2 символа</p>
+                <p *ngIf="firstName?.errors?.['maxlength']">*Максимум 50 символов</p>
+                <p *ngIf="firstName?.errors?.['pattern']">*Только буквы и цифры</p>
+            </div>
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                    <svg [ngClass]="{' text-red-700': lastName?.invalid && lastName?.dirty}" class="w-6 h-6 mx-3 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M7 2a2 2 0 0 0-2 2v1a1 1 0 0 0 0 2v1a1 1 0 0 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H7Zm3 8a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm-1 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                    </svg>                      
+                </span>
+                <input [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': lastName?.invalid && lastName?.dirty}" formControlName="lastName" type="text" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Фамилия">
+            </div>
+            <div *ngIf="lastName?.invalid && lastName?.dirty" class="mt-2 text-sm font-medium text-red-600">
+                <p *ngIf="lastName?.errors?.['required']">*Фамилия обязательна</p>
+                <p *ngIf="lastName?.errors?.['minlength']">*Минимум 2 символа</p>
+                <p *ngIf="lastName?.errors?.['maxlength']">*Максимум 50 символов</p>
+                <p *ngIf="lastName?.errors?.['pattern']">*Только буквы и цифры</p>
+            </div>
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                    <svg [ngClass]="{' text-red-700': email?.invalid && email?.dirty}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mx-3 text-gray-300">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                    </svg>
+                </span>
+                <input [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': email?.invalid && email?.dirty}" formControlName="email" type="text" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email">
+            </div>
+            <div *ngIf="email?.invalid && email?.dirty" class="mt-1 text-sm text-red-600">
+                <p *ngIf="email?.errors?.['required']">*Email обязателен</p>
+                <p *ngIf="email?.errors?.['email']">*Введите корректный email</p>
+            </div>
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                    <svg [ngClass]="{' text-red-700': phone?.invalid && phone?.dirty}" class="w-6 h-6 mx-3 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z"/>
+                    </svg>
+                </span>
+                <input [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': phone?.invalid && phone?.dirty}" type="text" formControlName="phone" id="phone-input" aria-describedby="helper-text-explanation" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="+375 XX YYY-YY-YY"/>
+            </div>
+            <div *ngIf="phone?.invalid && phone?.dirty" class="mt-1 text-sm text-red-600">
+                <p *ngIf="phone?.errors?.['required']">*Номер телефона обязателен</p>
+                <p *ngIf="phone?.errors?.['pattern']">*Введите корректный номер (6-15 цифр, можно с +)</p>
+            </div>
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mx-3 text-gray-300" fill="currentColor" [ngClass]="{' text-red-700': date?.invalid && date?.dirty}" stroke-width="2" viewBox="0 0 448 512">
+                        <path d="M128 0c17.7 0 32 14.3 32 32l0 32 128 0 0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32 48 0c26.5 0 48 21.5 48 48l0 48L0 160l0-48C0 85.5 21.5 64 48 64l48 0 0-32c0-17.7 14.3-32 32-32zM0 192l448 0 0 272c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 192zm64 80l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm128 0l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zM64 400l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zm112 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16z"/>
+                    </svg>
+                </span>
+                <input type="date" [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': date?.invalid && date?.dirty}" formControlName="date" class="block w-full py-3 text-gray-400 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40">
+            </div>
+            <div *ngIf="date?.invalid && date?.dirty" class="mt-1 text-sm text-red-600">
+                <p *ngIf="date?.errors?.['required']">*Дата обязательна</p>
+            </div>
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  class="w-6 h-6 mx-3 text-gray-300 " [ngClass]="{' text-red-700': password?.invalid && password?.dirty}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </span>
+                <input [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': password?.invalid && password?.dirty}"  formControlName="password" [type]="type" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Пароль">
+                <span class="absolute right-3 cursor-pointer" (click)="hideShowPass()">
+                    <i *ngIf="isText == false" class="fa-solid fa-eye-slash text-gray-400" [ngClass]="{' text-red-700': password?.invalid && password?.dirty}"></i>
+                    <i *ngIf="isText == true" class="fa-solid fa-eye text-gray-400" [ngClass]="{' text-red-700': password?.invalid && password?.dirty}"></i>
+                </span>
+            </div>
+            <div *ngIf="password?.invalid && password?.dirty" class="mt-1 text-sm text-red-600">
+                <p *ngIf="password?.errors?.['required']">*Пароль обязателен</p>
+                <p *ngIf="password?.errors?.['minlength']">*Минимум 8 символов</p>
+                <p *ngIf="password?.errors?.['pattern']">*Должен содержать заглавные, строчные буквы(латиница) и цифры</p>
+            </div>
+            <div class="relative flex items-center mt-4">
+                <span class="absolute">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  class="w-6 h-6 mx-3 text-gray-300 " [ngClass]="{' text-red-700': confirmPassword?.invalid && confirmPassword?.dirty}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </span>
+                <input  [ngClass]="{'bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500  focus:border-red-500': confirmPassword?.invalid && confirmPassword?.dirty}"  formControlName="confirmPassword" type="password" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11  focus:border-amber-400 focus:ring-amber-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Подтвердите пароль">
+            </div>
+            <div *ngIf="confirmPassword?.invalid && confirmPassword?.dirty" class="mt-1 text-sm text-red-600">
+                <p *ngIf="confirmPassword?.errors?.['required']">*Подтверждение пароля обязательно</p>
+                <p *ngIf="confirmPassword?.errors?.['mismatch']">*Пароли не совпадают</p>
+            </div>
+            <div class="mt-6">
+                <button type="submit" [disabled]="isLoading" class="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-amber-500 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring focus:ring-amber-300 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span *ngIf="!isLoading">Зарегистрироваться</span>
+                    <span *ngIf="isLoading">Обработка...</span>
+                </button>
+
+                <p class="mt-4 text-center text-gray-600 ">или зарегистрироваться с помощью</p>
+
+                <a class="flex items-center justify-center px-6 py-3 mt-4 text-gray-600  transition-colors duration-300 transform border rounded-lg  hover:bg-gray-100 ">
+                    <svg class="w-6 h-6 mx-2" viewBox="0 0 40 40">
+                        <path d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z" fill="#FFC107" />
+                        <path d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z" fill="#FF3D00" />
+                        <path d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z" fill="#4CAF50" />
+                        <path d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z" fill="#1976D2" />
+                    </svg>
+
+                    <span class="mx-2 ">Зарегистрироваться с помощью Google</span>
+                </a>
+
+                <div class="mt-6 text-center ">
+                    <a [routerLink]="['/login']" class="text-sm text-blue-500 hover:underline ">
+                        У вас уже есть учетная запись? Войти
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

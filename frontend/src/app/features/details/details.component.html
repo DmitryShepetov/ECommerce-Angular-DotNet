@@ -1,0 +1,104 @@
+<div class="min-h-full">
+  <div class="w-full">
+    <section class="relative block h-[500px]">
+      <div class="absolute top-0 w-full h-full bg-gradient-to-r from-amber-300 to-amber-400">
+        <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black"></span>
+      </div>
+  
+    </section>
+    <section class="relative py-16 bg-gray-200">
+      <div class="profileHistory mx-auto px-4">
+        <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+          <div class="flex justify-center mt-7">
+            <h4 class="text-xl text-gray-900 font-bold">Заказ №{{ orderId}}</h4>
+          </div>
+          <div class="mx-6">
+            <p class="mt-2"><strong><i class="fa-solid fa-person"></i>  Получатель:</strong> {{ order?.firstName }} {{ order?.lastName }}</p>
+            <p class="mt-2"><strong><i class="fa-solid fa-phone"></i> Телефон:</strong> {{ order.phone }}</p>
+            <p class="mt-2"><strong><i class="fa-solid fa-map-location-dot"></i> Адрес:</strong> {{ order.adress }}</p>
+            <p class="mt-2"><strong><i class="fa-solid fa-truck"></i> Способ доставки:</strong> {{ order.deliveryMethod }}</p>
+            <p class="mt-2"><strong><i class="fa-solid fa-credit-card"></i> Способ оплаты:</strong> {{ order.paymentMethod }}</p>
+            <p class="mt-2"><strong><i class="fa-solid fa-wallet"></i> Общая сумма:</strong> {{ order.totalPrice }} р.</p>
+          </div>
+            <div class="mt-8 mx-6 border-t border-gray-200"></div>
+            <h2 *ngIf="!order?.statusHistory?.length" class="text-gray-700 font-semibold mt-3 p-8">Нет истории статусов</h2>
+            <div *ngIf="order?.statusHistory?.length > 0" class="flex justify-center  bg-white rounded-lg mt-3 p-8">
+              <div>
+                <h4 class="text-xl text-gray-900 font-bold">История заказа</h4>
+                <div class="relative px-4">
+                    <div class="absolute h-full border border-dashed border-opacity-20 border-secondary"></div>
+                    <!-- start::Timeline item -->
+                    <div class="flex items-center w-full my-6 -ml-1.5" *ngFor="let history of order.statusHistory">
+                        <div class="w-1/12 mr-4 z-10">
+                            <div class="w-3.5 h-3.5 bg-amber-500 rounded-full"></div>
+                        </div>
+                        <div class="w-48">
+                            <p class="text-sm">{{ history.status }}</p>
+                            <p class="text-xs text-gray-500">{{ history.changedAt | date:'dd.MM.yyyy в HH:mm' }}</p>
+                        </div>
+                    </div>
+                    <!-- end::Timeline item -->
+                </div>
+              </div>
+              
+            </div>
+          <div class="px-6">
+            <div class="mt-8 py-10 border-t border-gray-200 text-center">
+              <div class="flex flex-wrap justify-center">
+                <div class="w-full px-4">
+                  <h2 class="text-xl text-gray-900 font-bold">Товары:</h2>
+                    <section class=" mx-auto">
+                      <div class="flex flex-col mt-6">
+                          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                              <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                  <div class="overflow-hidden border border-gray-200  md:rounded-lg">
+                                      <table class="min-w-full divide-y divide-gray-200 ">
+                                          <thead class="bg-gray-50 ">
+                                              <tr>
+                                                  <th scope="col" class="py-3.5 px-4 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                          <span>Фото</span>
+                                                  </th>
+                                                  <th scope="col" class="px-12 py-3.5 text-sm font-semibold text-lecenterft rtl:text-center text-gray-500 ">
+                                                          <span>Название</span>
+                                                  </th>
+                                                  <th scope="col" class="px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                          <span>Цена</span>
+                                                  </th>
+                                                  <th scope="col" class="px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                    <span>Количество</span>
+                                                  </th>
+                                                  <th scope="col" class="px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                    <span>Итого</span>
+                                                  </th>
+                                              </tr>
+                                          </thead>
+                                          <tbody class="bg-white divide-y divide-gray-200">
+                                            <ng-container *ngFor="let item of order.items">
+                                              <tr >
+                                                  <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap "><img [src]="'https://localhost:5001' + item?.imageUrl" alt="{{ order.name }}" class="cart-img"></td>
+                                                  <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.name }}</td>
+                                                  <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.price }} р.</td>
+                                                  <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.quantity }}</td>
+                                                  <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ (item.price * item.quantity) }} р.</td>
+
+                                                  <td class="px-4 py-4 text-sm whitespace-nowrap">
+                                                      <div class="flex items-center gap-x-6">
+                                                      </div>
+                                                  </td>
+                                              </tr>
+                                            </ng-container>
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>

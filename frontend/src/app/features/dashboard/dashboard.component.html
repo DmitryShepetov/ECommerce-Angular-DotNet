@@ -1,0 +1,30 @@
+<app-sidebar></app-sidebar>
+
+<div class="min-h-full ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%] p-4">
+    <div class="bg-white rounded-2xl shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Аналитика заказов</h2>
+        <canvas baseChart 
+                [data]="orderChartData"
+                [options]="orderChartOptions"
+                [type]="'line'">
+        </canvas>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Статусы заказов</h2>
+            <canvas baseChart 
+                    [data]="orderStatusChartData"
+                    [options]="orderStatusChartOptions"
+                    [type]="'pie'">
+            </canvas>
+        </div>
+        <div class="bg-white rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Распределение товаров по категориям</h2>
+            <canvas baseChart 
+                    [data]="productCategoryChartData"
+                    [options]="productCategoryChartOptions"
+                    [type]="'pie'">
+            </canvas>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+<app-sidebar></app-sidebar>
+    <div class="min-h-full ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+      <div class="relative top-0 h-16 border-b bg-white lg:py-2.5">
+          <div class="px-6 flex items-center justify-between space-x-4 2xl:container">
+              <h5 hidden class="text-2xl text-gray-600 font-medium lg:block">Заказы</h5>
+              <button class="w-12 h-16 -mr-2 border-r lg:hidden">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 my-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+              </button>
+  
+          </div>
+      </div>
+        <div class="flex flex-wrap justify-center">
+          <div class="w-full px-4">
+            <div *ngIf="orders.length > 0">
+              <section class=" mx-auto">
+                <div class="flex flex-col mt-6">
+                    <div class="-ml-4 -my-2 overflow-x-auto sm:-ml-6 lg:-ml-8">
+                        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                            <div class="overflow-hidden border border-gray-200  md:rounded-lg">
+                                <table class="min-w-full border-collapse divide-y divide-gray-200 ">
+                                    <thead class="bg-gray-50 ">
+                                        <tr>
+                                            <th scope="col" class="border border-gray-300 px-2 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                              <button (click)="toggleSort()" class="flex items-center gap-x-2">Номер заказа
+                                                <svg *ngIf="sortIdActive == false" class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                  <path fill-rule="evenodd" d="M12.832 3.445a1 1 0 0 0-1.664 0l-4 6A1 1 0 0 0 8 11h8a1 1 0 0 0 .832-1.555l-4-6Zm-1.664 17.11a1 1 0 0 0 1.664 0l4-6A1 1 0 0 0 16 13H8a1 1 0 0 0-.832 1.555l4 6Z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <svg *ngIf="sortDirection === 'asc' && sortIdActive == true" class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                  <path fill-rule="evenodd" d="M18.425 10.271C19.499 8.967 18.57 7 16.88 7H7.12c-1.69 0-2.618 1.967-1.544 3.271l4.881 5.927a2 2 0 0 0 3.088 0l4.88-5.927Z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <svg *ngIf="sortDirection === 'desc' && sortIdActive == true" class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                  <path fill-rule="evenodd" d="M5.575 13.729C4.501 15.033 5.43 17 7.12 17h9.762c1.69 0 2.618-1.967 1.544-3.271l-4.881-5.927a2 2 0 0 0-3.088 0l-4.88 5.927Z" clip-rule="evenodd"/>
+                                                </svg>                                                  
+                                              </button></th>
+                                            <th scope="col" class="border border-gray-300 py-3.5 px-4 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                    <span>Заказ</span>
+                                            </th>
+            
+                                            <th scope="col" class="border border-gray-300 px-12 py-3.5 text-sm font-semibold text-lecenterft rtl:text-center text-gray-500 ">
+                                                    <span>Адрес заказа</span>
+                                            </th>
+            
+                                            <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">
+                                                    <span>Email</span>
+                                            </th>
+            
+                                            <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Способ доставки</th>
+            
+                                            <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Способ оплаты</th>
+                                            <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Итого</th>
+                                            <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center text-gray-500 ">
+                                              <button (click)="toggleStatusSort()" class="flex items-center gap-x-2">Статус
+                                                <svg *ngIf="sortStatusActive == false" class="w-4 h-4 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                  <path fill-rule="evenodd" d="M12.832 3.445a1 1 0 0 0-1.664 0l-4 6A1 1 0 0 0 8 11h8a1 1 0 0 0 .832-1.555l-4-6Zm-1.664 17.11a1 1 0 0 0 1.664 0l4-6A1 1 0 0 0 16 13H8a1 1 0 0 0-.832 1.555l4 6Z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <svg *ngIf="statusSortDirection === 'asc' && sortStatusActive == true" class="w-4 h-4 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                  <path fill-rule="evenodd" d="M18.425 10.271C19.499 8.967 18.57 7 16.88 7H7.12c-1.69 0-2.618 1.967-1.544 3.271l4.881 5.927a2 2 0 0 0 3.088 0l4.88-5.927Z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <svg *ngIf="statusSortDirection === 'desc' && sortStatusActive == true" class="w-4 h-4 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                  <path fill-rule="evenodd" d="M5.575 13.729C4.501 15.033 5.43 17 7.12 17h9.762c1.69 0 2.618-1.967 1.544-3.271l-4.881-5.927a2 2 0 0 0-3.088 0l-4.88 5.927Z" clip-rule="evenodd"/>
+                                                </svg>    
+                                              </button>
+                                            </th>
+                                            <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Действие</th>
+            
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                      <ng-container *ngFor="let order of orders">
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ order.id }}</td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                                              <thead>
+                                                  <tr>
+                                                    <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Фото</th>
+                                                    <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Название</th>
+                                                    <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Цена</th>
+                                                    <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Количество</th>
+                                                    <th scope="col" class="border border-gray-300 px-4 py-3.5 text-sm font-semibold text-center rtl:text-center text-gray-500 ">Итого</th>
+                                                  </tr>
+                                              </thead>
+                                              <tr  *ngFor="let item of order.items">
+                                                  <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-nowrap"><img [src]="'https://localhost:5001' + item?.imageUrl" alt="{{ item.name }}" class="cart-img"></td>
+                                                  
+                                                  <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.name }}</td>
+                                                  <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ item.price | currency:'₽':'symbol':'1.2-2' }}</td>
+                                                  <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500 whitespace-nowrap">{{ item.quantity }}</td>
+                                                  <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ (item.price * item.quantity) | currency:'₽':'symbol':'1.2-2' }}</td>
+                                              </tr>
+                                          </td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap ">{{ order.adress }}</td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ order.email }}</td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ order.deliveryMethod }}</td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ order.paymentMethod }}</td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm text-gray-500  whitespace-nowrap">{{ order.totalPrice }} р.</td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                            <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2" [ngClass]="getStatusClass(order.statusHistory[order.statusHistory.length - 1]?.status)">
+                                                <h2 *ngIf="!order.isEdit" class="text-sm font-normal" [ngClass]="getStatusClass(order.statusHistory[order.statusHistory.length - 1]?.status)">{{ order.statusHistory[order.statusHistory.length - 1]?.status }}</h2>
+                                                <select *ngIf="order.isEdit" [(ngModel)]="order.selectedStatus" class="border cursor-pointer rounded p-1 bg-white">
+                                                  <option *ngFor="let status of statuses" [value]="status" 
+                                                          [ngClass]="getStatusClass(status)">
+                                                      {{ status }}
+                                                  </option>
+                                                </select>
+                                            </div>
+                                            </td>
+                                            <td class="border border-gray-300 px-4 py-4 text-sm whitespace-nowrap">
+                                                <div class="flex items-center gap-x-6">
+                                                    <button *ngIf="!order.isEdit" (click)="edit(order)" class="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
+                                                      <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>                                      
+                                                    </button>
+                                                    <button (click)="cancel(order)" *ngIf="order.isEdit" class="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none">
+                                                      <i class="fa-solid fa-xmark fa-lg"></i>                                    
+                                                    </button>
+                                                    <button (click)="saveStatus(order)" *ngIf="order.isEdit"  class="text-gray-500 transition-colors duration-200   hover:text-green-500 focus:outline-none">
+                                                      <i class="fa-solid fa-check fa-lg"></i>                                     
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                      </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </section>
+            </div>
+        </div>
+      </div>
+    </div>

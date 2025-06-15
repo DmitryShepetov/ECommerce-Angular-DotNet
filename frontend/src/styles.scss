@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
+
+
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+}
+/* Общее стилизование полосы прокрутки */ 
+::-webkit-scrollbar { width: 12px; /* Ширина полосы прокрутки */ 
+} /* Стилизование трека полосы прокрутки */ 
+::-webkit-scrollbar-track { background: #fff; /* Цвет фона трека */ 
+} /* Стилизование ползунка (thumb) полосы прокрутки */ 
+::-webkit-scrollbar-thumb { 
+    background: #919191; /* Цвет ползунка */ 
+    border-radius: 10px; /* Скругление углов ползунка */
+ } /* Стилизование ползунка при наведении */ 
+    ::-webkit-scrollbar-thumb:hover { background: #525252; /* Цвет ползунка при наведении */ }
