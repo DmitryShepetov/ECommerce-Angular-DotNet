@@ -92,25 +92,37 @@ dotnet dev-certs https --trust
 
 ---
 
-##📸 Скриншоты
+## 📸 Скриншоты
 
-![image](https://github.com/user-attachments/assets/713365be-1aa1-4507-98df-a8f6c8015767)
+### 🏠 Главная страница
+<img src="https://github.com/user-attachments/assets/713365be-1aa1-4507-98df-a8f6c8015767" width="800"/>
 
-![image](https://github.com/user-attachments/assets/5d3db8c7-a51e-491d-b7f5-04550ee1b4bc)
+### 📄 Футер
+<img src="https://github.com/user-attachments/assets/5d3db8c7-a51e-491d-b7f5-04550ee1b4bc" width="800"/>
 
-![image](https://github.com/user-attachments/assets/234ac457-0812-47db-9cec-1c1fe1eb5a87)
+### 🛍️ Модальное окно товара (карточка)
+<img src="https://github.com/user-attachments/assets/234ac457-0812-47db-9cec-1c1fe1eb5a87" width="800"/>
 
-![image](https://github.com/user-attachments/assets/c543b3fc-d268-48d4-98e2-7717073196a7)
+### 🔐 Страница входа
+<img src="https://github.com/user-attachments/assets/c543b3fc-d268-48d4-98e2-7717073196a7" width="800"/>
 
-![image](https://github.com/user-attachments/assets/57f1d760-85d0-45f1-b4c1-b2f7ce743d07)
+### 🧾 Страница регистрации
+<img src="https://github.com/user-attachments/assets/57f1d760-85d0-45f1-b4c1-b2f7ce743d07" width="800"/>
 
-![image](https://github.com/user-attachments/assets/f44c4afb-b5d9-4b4a-a90c-6181365cc1ed)
+### 👤 Личный кабинет
+<img src="https://github.com/user-attachments/assets/f44c4afb-b5d9-4b4a-a90c-6181365cc1ed" width="800"/>
 
-![image](https://github.com/user-attachments/assets/3db297ef-728d-4864-9974-1302afd3c7d1)
+### ⚙️ Админ-панель
+<img src="https://github.com/user-attachments/assets/3db297ef-728d-4864-9974-1302afd3c7d1" width="800"/>
 
-![image](https://github.com/user-attachments/assets/5e207067-c5f8-48c1-a7a6-c40720b3646c)
+### 🛒 Корзина
+<img src="https://github.com/user-attachments/assets/5e207067-c5f8-48c1-a7a6-c40720b3646c" width="800"/>
 
-![image](https://github.com/user-attachments/assets/659f80f3-5e52-4cee-8923-5bc91d028e07)
+### 📦 Оформление заказа
+<img src="https://github.com/user-attachments/assets/45094ac6-c666-4e61-bf1c-3e0bd712e90b" width="800"/>
+
+### ➕ Добавление товаров (админ-панель)
+<img src="https://github.com/user-attachments/assets/659f80f3-5e52-4cee-8923-5bc91d028e07" width="800"/>
 
 ---
 
