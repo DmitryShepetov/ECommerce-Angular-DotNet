@@ -6,68 +6,68 @@ namespace HoneyShop.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly AppDBContext appDBContext;
-        public UserRepository(AppDBContext appDBContext)
+        private readonly AppDbContext _appDbContext;
+        public UserRepository(AppDbContext appDBContext)
         {
-            this.appDBContext = appDBContext;
+            _appDbContext = appDBContext;
         }
    
 
         // Получение пользователя по ID
-        public async Task<User> GetByIdAsync(int id)
+        public async Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await appDBContext.Users.FindAsync(id);
+            return await _appDbContext.Users.FindAsync(new object[] { id }, cancellationToken);
         }
 
         // Получение пользователя по Username
-        public async Task<User> GetByUsernameAsync(string username)
+        public async Task<User> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            return await appDBContext.Users.FirstOrDefaultAsync(u => u.username == username);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            return await appDBContext.Users.FirstOrDefaultAsync(u => u.email == email);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
 
-        public async Task<User> GetUserByTokenAsync(string token)
+        public async Task<User> GetUserByTokenAsync(string token, CancellationToken cancellationToken = default)
         {
-            return await appDBContext.Users.FirstOrDefaultAsync(u => u.RefreshToken == token);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.RefreshToken == token, cancellationToken);
         }
 
-        public async Task<User> GetByPhoneAsync(string phone)
+        public async Task<User> GetByPhoneAsync(string phone, CancellationToken cancellationToken = default)
         {
-            return await appDBContext.Users.FirstOrDefaultAsync(u => u.phone == phone);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Phone == phone, cancellationToken);
         }
         // Получение всех пользователей
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await appDBContext.Users.ToListAsync();
+            return await _appDbContext.Users.ToListAsync(cancellationToken);
         }
 
         // Добавление нового пользователя
-        public async Task AddUserAsync(User user)
+        public async Task AddUserAsync(User user, CancellationToken cancellationToken = default)
         {
-            await appDBContext.Users.AddAsync(user);
-            await appDBContext.SaveChangesAsync();
+            await _appDbContext.Users.AddAsync(user, cancellationToken);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
 
         // Обновление информации о пользователе
-        public async Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(User user, CancellationToken cancellationToken = default)
         {
-            appDBContext.Users.Update(user);
-            await appDBContext.SaveChangesAsync();
+            _appDbContext.Users.Update(user);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
 
         // Удаление пользователя по ID
-        public async Task DeleteUserAsync(int id)
+        public async Task DeleteUserAsync(int id, CancellationToken cancellationToken = default)
         {
-            var user = await appDBContext.Users.FindAsync(id);
+            var user = await _appDbContext.Users.FindAsync(new object[] { id }, cancellationToken);
             if (user != null)
             {
-                appDBContext.Users.Remove(user);
-                await appDBContext.SaveChangesAsync();
+                _appDbContext.Users.Remove(user);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
             }
         }
     }

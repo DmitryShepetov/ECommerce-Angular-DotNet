@@ -17,24 +17,24 @@ namespace HoneyShop.Controllers
             _categoryService = categoryService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllCategories(CancellationToken cancellationToken)
         {
             try
             {
-                var category = await _categoryService.GetAllCategoriesAsync();
-                return Ok(category);
+                var categories = await _categoryService.GetAllCategoriesAsync(cancellationToken);
+                return Ok(categories);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Ошибка сервера", Error = ex.Message });
+                return StatusCode(500, new { Message = "Server error", Error = ex.Message });
             }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
+        public async Task<IActionResult> GetCategoryById(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var category = await _categoryService.GetCategoryByIdAsync(id);
+                var category = await _categoryService.GetCategoryByIdAsync(id, cancellationToken);
                 return Ok(category);
             }
             catch (KeyNotFoundException ex)
@@ -44,11 +44,11 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddCategory([FromBody] CategoryDto categoryDto)
+        public async Task<IActionResult> AddCategory([FromBody] CategoryDto categoryDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _categoryService.AddCategoryAsync(categoryDto);
+                await _categoryService.AddCategoryAsync(categoryDto, cancellationToken);
                 return Ok(new { message = "Category added successfully." });
             }
             catch (ArgumentException ex)
@@ -62,11 +62,11 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categoryDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _categoryService.UpdateProductAsync(id, categoryDto);
+                await _categoryService.UpdateCategoryAsync(id, categoryDto, cancellationToken);
                 return Ok("Category updated successfully.");
             }
             catch (ArgumentException ex)
@@ -80,12 +80,12 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(int id, CancellationToken cancellationToken)
         {
             try
             {
-                await _categoryService.DeleteCategoryAsync(id);
-                return Ok(new { message = "Category added successfully." });
+                await _categoryService.DeleteCategoryAsync(id, cancellationToken);
+                return Ok(new { message = "Category deleted successfully." });
             }
             catch (KeyNotFoundException ex)
             {

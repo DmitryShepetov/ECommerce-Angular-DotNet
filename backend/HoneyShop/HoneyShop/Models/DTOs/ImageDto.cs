@@ -2,7 +2,7 @@
 {
     public class ImageDto
     {
-       public string mimeType { get; set; }
-       public string filePath { get; set; }
+       public string MimeType { get; set; }
+       public string FilePath { get; set; }
     }
 }

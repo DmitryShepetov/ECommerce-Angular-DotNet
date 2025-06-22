@@ -17,24 +17,23 @@ namespace HoneyShop
 {
     public class Startup
     {
-        private readonly IConfiguration Configuration;
-        private IConfigurationRoot _confString;
+        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _dbConfig;
         public Startup(IHostEnvironment hostEnv, IConfiguration configuration)
         {
-            _confString = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
-            Configuration = configuration;
+            _dbConfig = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
+            _configuration = configuration;
         }
 
         // Add services to the container.
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<string>(Configuration.GetSection("Google"));
-            services.AddDbContext<AppDBContext>(options => options.UseSqlServer(_confString.GetConnectionString("DefaultConnection")));
+            services.Configure<string>(_configuration.GetSection("Google"));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_dbConfig.GetConnectionString("DefaultConnection")));
             services.AddAuthentication(opt => {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
             .AddJwtBearer(options =>
             {
@@ -45,9 +44,9 @@ namespace HoneyShop
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidIssuer = "HoneyShopApi",
-                    ValidAudience = "HoneyShopApiClient",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-256-bit-secret-key-at-least-32-characters-long"))
+                    ValidIssuer = _configuration["Jwt:Issuer"],
+                    ValidAudience = _configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
                 };
             });
             // Регистрация репозиториев
@@ -101,7 +100,7 @@ namespace HoneyShop
                     }
                 });
             });
-            services.AddRazorPages();
+
             services.AddAuthorization();
 
             services.AddLogging(builder =>

@@ -15,154 +15,167 @@ namespace HoneyShop.Services
             _orderRepository = orderRepository;
             _orderStatusHistoryRepository = orderStatusHistoryRepository;
         }
-        public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
+        public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync(CancellationToken cancellationToken = default)
         {
-            var orders = await _orderRepository.GetAllAsync();
+            var orders = await _orderRepository.GetAllAsync(cancellationToken);
             return orders.Select(MapToDto);
         }
-        public async Task<IEnumerable<OrderDto>> GetOrderByPhoneNumberAsync(string phone)
+        public async Task<IEnumerable<OrderDto>> GetOrderByPhoneAsync(string phone, CancellationToken cancellationToken = default)
         {
-            var orders = await _orderRepository.GetOrderByPhoneNumberAsync(phone);
+            var orders = await _orderRepository.GetOrderByPhoneAsync(phone, cancellationToken);
             if (orders == null)
             {
                 throw new KeyNotFoundException($"Order with phone {phone} not found.");
             }
             return orders.Select(MapToDto);
         }
-        public async Task<OrderDto> GetOrderByIdAsync(int id)
+        public async Task<OrderDto> GetOrderByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await _orderRepository.GetOrderByIdAsync(id, cancellationToken);
             if (order == null)
             {
                 throw new KeyNotFoundException($"Order with ID {id} not found.");
             }
             return MapToDto(order);
         }
-        public async Task AddOrderAsync(OrderDto orderDto)
+
+        public async Task<(List<OrderDto> Orders, int TotalCount)> GetPaginatedOrdersAsync(PaginationParameters paginationParams, CancellationToken cancellationToken)
+        {
+            var orders = await _orderRepository.GetPaginatedOrdersAsync(paginationParams, cancellationToken);
+            var total = await _orderRepository.GetTotalOrdersCountAsync(cancellationToken);
+
+            var orderDtos = orders.Select(MapToDto).ToList();
+            return (orderDtos, total);
+        }
+
+        public async Task AddOrderAsync(OrderDto orderDto, CancellationToken cancellationToken = default)
         {
             ValidateOrderDto(orderDto);
             // Преобразование DTO в сущность
             var order = new Order
             {
-                firstName = orderDto.firstName,
-                lastName = orderDto.lastName,
-                methodDeliveryData = orderDto.methodDeliveryData,
-                deliveryMethod = orderDto.deliveryMethod,
-                paymentMethod = orderDto.paymentMethod,
-                adress = orderDto.adress,
-                phone = orderDto.phone,
-                email = orderDto.email,
-                dateTime = orderDto.dateTime,
-                totalPrice = orderDto.totalPrice,
+                FirstName = orderDto.FirstName,
+                LastName = orderDto.LastName,
+                MethodDeliveryData = orderDto.MethodDeliveryData,
+                DeliveryMethod = orderDto.DeliveryMethod,
+                PaymentMethod = orderDto.PaymentMethod,
+                Adress = orderDto.Adress,
+                Phone = orderDto.Phone,
+                Email = orderDto.Email,
+                DateTime = orderDto.DateTime,
+                TotalPrice = orderDto.TotalPrice,
                 Items = orderDto.Items.Select(i => new OrderItem
                 {
-                    imageUrl = i.imageUrl,
-                    name = i.name,
-                    price = i.price,
-                    quantity = i.quantity
+                    ImageUrl = i.ImageUrl,
+                    Name = i.Name,
+                    Price = i.Price,
+                    Quantity = i.Quantity
                 }).ToList()
             };
 
             // Сохранение через репозиторий
-            await _orderRepository.AddAsync(order);
+            await _orderRepository.AddAsync(order, cancellationToken);
             var orderStatusHistory = new OrderStatusHistory
             {
-                status = "Принят в обработку",
-                changedAt = DateTime.Now,
-                OrderId = order.id
+                Status = "Принят в обработку",
+                ChangedAt = DateTime.Now,
+                OrderId = order.Id
             };
-            await _orderStatusHistoryRepository.AddAsync(orderStatusHistory);
+            await _orderStatusHistoryRepository.AddAsync(orderStatusHistory, cancellationToken);
         }
-        public async Task DeleteOrderAsync(int id)
+        public async Task DeleteOrderAsync(int id, CancellationToken cancellationToken = default)
         {
             // Проверяем, существует ли продукт
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await _orderRepository.GetOrderByIdAsync(id, cancellationToken);
             if (order == null)
             {
                 throw new KeyNotFoundException($"Order with ID {id} not found.");
             }
 
             // Удаляем продукт
-            await _orderRepository.DeleteAsync(id);
+            await _orderRepository.DeleteAsync(id, cancellationToken);
         }
-        public async Task UpdateOrderAsync(int id, OrderDto orderDto)
+        public async Task UpdateOrderAsync(int id, OrderDto orderDto, CancellationToken cancellationToken = default)
         {
             ValidateOrderDto(orderDto);
-            var existingProduct = await _orderRepository.GetByIdAsync(id);
+            var existingProduct = await _orderRepository.GetOrderByIdAsync(id, cancellationToken);
             if (existingProduct == null)
             {
                 throw new KeyNotFoundException($"Watch with ID {id} not found.");
             }
-            existingProduct.firstName = orderDto.firstName ?? existingProduct.firstName;
-            existingProduct.lastName = orderDto.lastName ?? existingProduct.lastName;
-            existingProduct.methodDeliveryData = orderDto.methodDeliveryData ?? existingProduct.methodDeliveryData;
-            existingProduct.deliveryMethod = orderDto.deliveryMethod ?? existingProduct.deliveryMethod;
-            existingProduct.paymentMethod = orderDto.paymentMethod ?? existingProduct.paymentMethod;
-            existingProduct.adress = orderDto.adress ?? existingProduct.adress;
-            existingProduct.phone = orderDto.phone ?? existingProduct.phone;
-            existingProduct.email = orderDto.email ?? existingProduct.email;
-            existingProduct.dateTime = orderDto.dateTime;
-            existingProduct.totalPrice = orderDto.totalPrice;
+            existingProduct.FirstName = orderDto.FirstName ?? existingProduct.FirstName;
+            existingProduct.LastName = orderDto.LastName ?? existingProduct.LastName;
+            existingProduct.MethodDeliveryData = orderDto.MethodDeliveryData ?? existingProduct.MethodDeliveryData;
+            existingProduct.DeliveryMethod = orderDto.DeliveryMethod ?? existingProduct.DeliveryMethod;
+            existingProduct.PaymentMethod = orderDto.PaymentMethod ?? existingProduct.PaymentMethod;
+            existingProduct.Adress = orderDto.Adress ?? existingProduct.Adress;
+            existingProduct.Phone = orderDto.Phone ?? existingProduct.Phone;
+            existingProduct.Email = orderDto.Email ?? existingProduct.Email;
+            existingProduct.DateTime = orderDto.DateTime;
+            existingProduct.TotalPrice = orderDto.TotalPrice;
             existingProduct.Items = orderDto.Items.Select(i => new OrderItem
             {
-                imageUrl = i.imageUrl,
-                name = i.name,
-                price = i.price,
-                quantity = i.quantity
+                ImageUrl = i.ImageUrl,
+                Name = i.Name,
+                Price = i.Price,
+                Quantity = i.Quantity
             }).ToList();
 
-            await _orderRepository.UpdateAsync(existingProduct);
+            await _orderRepository.UpdateAsync(existingProduct, cancellationToken);
         }
 
         private static OrderDto MapToDto(Order p) => new OrderDto
         {
-            id = p.id,
-            firstName = p.firstName,
-            lastName = p.lastName,
-            methodDeliveryData = p.methodDeliveryData,
-            deliveryMethod = p.deliveryMethod,
-            paymentMethod = p.paymentMethod,
-            adress = p.adress,
-            phone = p.phone,
-            email = p.email,
-            dateTime = p.dateTime,
-            totalPrice = p.totalPrice,
+            Id = p.Id,
+            FirstName = p.FirstName,
+            LastName = p.LastName,
+            MethodDeliveryData = p.MethodDeliveryData,
+            DeliveryMethod = p.DeliveryMethod,
+            PaymentMethod = p.PaymentMethod,
+            Adress = p.Adress,
+            Phone = p.Phone,
+            Email = p.Email,
+            DateTime = p.DateTime,
+            TotalPrice = p.TotalPrice,
             Items = (p.Items ?? new List<OrderItem>()).Select(i => new OrderItemDto
             {
-                imageUrl = i.imageUrl,
-                name = i.name,
-                price = i.price,
-                quantity = i.quantity
+                ImageUrl = i.ImageUrl,
+                Name = i.Name,
+                Price = i.Price,
+                Quantity = i.Quantity
             }).ToList()
         };
 
         private static void ValidateOrderDto(OrderDto orderDto)
         {
-            if (string.IsNullOrWhiteSpace(orderDto.firstName) || orderDto.firstName.Length < 2 || orderDto.firstName.Length > 30)
+            if (orderDto == null)
+                throw new ArgumentNullException(nameof(orderDto));
+
+            if (string.IsNullOrWhiteSpace(orderDto.FirstName) || orderDto.FirstName.Length < 2 || orderDto.FirstName.Length > 30)
                 throw new ArgumentException("Имя должно быть от 2 до 30 символов.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.lastName) || orderDto.lastName.Length < 2 || orderDto.lastName.Length > 30)
+            if (string.IsNullOrWhiteSpace(orderDto.LastName) || orderDto.LastName.Length < 2 || orderDto.LastName.Length > 30)
                 throw new ArgumentException("Фамилия должна быть от 2 до 30 символов.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.methodDeliveryData))
+            if (string.IsNullOrWhiteSpace(orderDto.MethodDeliveryData))
                 throw new ArgumentException("Метод времени доставки не может быть пустым.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.deliveryMethod) || orderDto.deliveryMethod.Length < 5 || orderDto.deliveryMethod.Length > 25)
+            if (string.IsNullOrWhiteSpace(orderDto.DeliveryMethod) || orderDto.DeliveryMethod.Length < 5 || orderDto.DeliveryMethod.Length > 25)
                 throw new ArgumentException("Метод доставки должен быть от 5 до 25 символов.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.paymentMethod) || orderDto.paymentMethod.Length < 5 || orderDto.paymentMethod.Length > 50)
+            if (string.IsNullOrWhiteSpace(orderDto.PaymentMethod) || orderDto.PaymentMethod.Length < 5 || orderDto.PaymentMethod.Length > 50)
                 throw new ArgumentException("Метод оплаты должен быть от 5 до 50 символов.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.adress) || orderDto.adress.Length < 10 || orderDto.adress.Length > 150)
+            if (string.IsNullOrWhiteSpace(orderDto.Adress) || orderDto.Adress.Length < 10 || orderDto.Adress.Length > 150)
                 throw new ArgumentException("Адрес должен быть от 10 до 150 символов.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.phone) || !Regex.IsMatch(orderDto.phone, @"^\+?\d{6,15}$"))
+            if (string.IsNullOrWhiteSpace(orderDto.Phone) || !Regex.IsMatch(orderDto.Phone, @"^\+?\d{6,15}$"))
                 throw new ArgumentException("Номер телефона должен быть от 6 до 15 символов.");
 
-            if (string.IsNullOrWhiteSpace(orderDto.email) || !Regex.IsMatch(orderDto.email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") || orderDto.email.Length < 10 || orderDto.email.Length > 150)
+            if (string.IsNullOrWhiteSpace(orderDto.Email) || !Regex.IsMatch(orderDto.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") || orderDto.Email.Length < 10 || orderDto.Email.Length > 150)
                 throw new ArgumentException("Email должен быть от 5 до 50 символов.");
 
-            if (orderDto.totalPrice <= 0)
+            if (orderDto.TotalPrice <= 0)
                 throw new ArgumentException("Общая стоимость должна быть больше 0.");
         }
     }

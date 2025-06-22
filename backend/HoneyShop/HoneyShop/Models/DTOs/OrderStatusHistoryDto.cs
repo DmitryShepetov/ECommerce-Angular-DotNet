@@ -2,9 +2,9 @@
 {
     public class OrderStatusHistoryDto
     {
-        public int id { get; set; }
-        public string status { get; set; }
-        public DateTime changedAt { get; set; }
+        public int Id { get; set; }
+        public string Status { get; set; }
+        public DateTime ChangedAt { get; set; }
         public int OrderId { get; set; }
     }
 }

@@ -31,67 +31,67 @@ public class AuthService : IAuthService
         _tokenHandler = new JwtSecurityTokenHandler();
     }
 
-    public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
+    public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
     {
 
         // Валидация входных данных
         if (registerDto == null)
             throw new ArgumentNullException(nameof(registerDto));
 
-        if (string.IsNullOrWhiteSpace(registerDto.phone) || !Regex.IsMatch(registerDto.phone, @"^\+?\d{6,15}$"))
+        if (string.IsNullOrWhiteSpace(registerDto.Phone) || !Regex.IsMatch(registerDto.Phone, @"^\+?\d{6,15}$"))
             throw new ArgumentException("Номер телефона должен быть от 6 до 15 символов.");
 
-        if (string.IsNullOrWhiteSpace(registerDto.username) || registerDto.username.Length < 2 || registerDto.username.Length > 30)
+        if (string.IsNullOrWhiteSpace(registerDto.Username) || registerDto.Username.Length < 2 || registerDto.Username.Length > 30)
             throw new ArgumentException("Имя пользователя должно быть от 2 до 30 символов.");
 
         // Проверка имени пользователя
-        var existingUser = await _userRepository.GetByUsernameAsync(registerDto.username);
+        var existingUser = await _userRepository.GetByUsernameAsync(registerDto.Username, cancellationToken);
         if (existingUser != null)
         {
             throw new ArgumentException("Username is already taken.");
         }
 
         // Проверка email
-        var existingEmailUser = await _userRepository.GetByEmailAsync(registerDto.email);
+        var existingEmailUser = await _userRepository.GetByEmailAsync(registerDto.Email, cancellationToken);
         if (existingEmailUser != null)
         {
             throw new ArgumentException("Email is already taken.");
         }
 
-        var existingPhoneUser = await _userRepository.GetByPhoneAsync(registerDto.phone);
+        var existingPhoneUser = await _userRepository.GetByPhoneAsync(registerDto.Phone, cancellationToken);
         if (existingPhoneUser != null)
         {
             throw new ArgumentException("Phone is already taken.");
         }
 
         // Проверка сложности пароля
-        var passwordValidationResult = ValidatePasswordStrength(registerDto.password);
+        var passwordValidationResult = ValidatePasswordStrength(registerDto.Password);
         if (!passwordValidationResult.IsValid)
         {
             throw new ArgumentException(passwordValidationResult.ErrorMessage);
         }
 
         // Хеширование пароля
-        var passwordHash = HashPassword(registerDto.password);
+        var passwordHash = HashPassword(registerDto.Password);
 
         var user = new User
         {
-            username = registerDto.username,
-            passwordHash = passwordHash,
-            firstName = registerDto.firstName,
-            lastName = registerDto.lastName,
-            email = registerDto.email,
-            phone = registerDto.phone,
-            date = registerDto.date,
-            role = "User", // По умолчанию
-            image = "/wwwroot/privateProfile/profileAvatar.png",
+            Username = registerDto.Username,
+            PasswordHash = passwordHash,
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
+            Email = registerDto.Email,
+            Phone = registerDto.Phone,
+            Date = registerDto.Date,
+            Role = "User", // По умолчанию
+            Image = "/wwwroot/privateProfile/profileAvatar.png",
             RefreshToken = null,
             RefreshTokenExpiryTime = DateTime.MinValue
         };
 
-        await _userRepository.AddUserAsync(user);
+        await _userRepository.AddUserAsync(user, cancellationToken);
 
-        var tokens = await GenerateTokens(user);
+        var tokens = await GenerateTokens(user, cancellationToken);
 
         return new AuthResponseDto
         {
@@ -99,25 +99,25 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
+    public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
     {
         if (loginDto == null)
             throw new ArgumentNullException(nameof(loginDto));
 
-        var user = await _userRepository.GetByUsernameAsync(loginDto.username);
+        var user = await _userRepository.GetByUsernameAsync(loginDto.Username, cancellationToken);
         if (user == null)
         {
             // Для безопасности не сообщаем, что пользователь не найден
             throw new UnauthorizedAccessException("Invalid username or password.");
         }
 
-        if (!VerifyPassword(loginDto.password, user.passwordHash))
+        if (!VerifyPassword(loginDto.Password, user.PasswordHash))
         {
             throw new UnauthorizedAccessException("Invalid username or password.");
         }
 
         // Генерация токенов
-        var tokens = await GenerateTokens(user);
+        var tokens = await GenerateTokens(user, cancellationToken);
 
         return new AuthResponseDto
         {
@@ -126,17 +126,17 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<TokenRefreshResponseDto> RefreshTokenAsync(string refreshRequest)
+    public async Task<TokenRefreshResponseDto> RefreshTokenAsync(string refreshRequest, CancellationToken cancellationToken = default)
     {
         if (refreshRequest == null)
             throw new ArgumentNullException(nameof(refreshRequest));
 
-        var user = await _userRepository.GetUserByTokenAsync(refreshRequest);
+        var user = await _userRepository.GetUserByTokenAsync(refreshRequest, cancellationToken);
         if (user == null || user.RefreshTokenExpiryTime <= _timeProvider.GetLocalNow())
             throw new SecurityTokenException("Invalid refresh token");
 
         // Генерация новых токенов
-        var newTokens = await GenerateTokens(user);
+        var newTokens = await GenerateTokens(user, cancellationToken);
 
         return new TokenRefreshResponseDto
         {
@@ -145,17 +145,17 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task RevokeTokenAsync(string username)
+    public async Task RevokeTokenAsync(string username, CancellationToken cancellationToken = default)
     {
-        var user = await _userRepository.GetByUsernameAsync(username);
+        var user = await _userRepository.GetByUsernameAsync(username, cancellationToken);
         if (user == null) return;
 
         user.RefreshToken = null;
         user.RefreshTokenExpiryTime = DateTime.MinValue;
-        await _userRepository.UpdateUserAsync(user);
+        await _userRepository.UpdateUserAsync(user, cancellationToken);
     }
 
-    public async Task<UserUpdateDto> UpdateProfile(UserUpdateDto userUpdateDto, ClaimsPrincipal userPrincipal)
+    public async Task<UserUpdateDto> UpdateProfile(UserUpdateDto userUpdateDto, ClaimsPrincipal userPrincipal, CancellationToken cancellationToken = default)
     {
         if (userUpdateDto == null)
             throw new ArgumentNullException(nameof(userUpdateDto));
@@ -168,51 +168,51 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Invalid user identity.");
 
         // Получаем пользователя из базы данных
-        var user = await _userRepository.GetByUsernameAsync(currentUsername);
+        var user = await _userRepository.GetByUsernameAsync(currentUsername, cancellationToken);
         if (user == null)
         {
             throw new UnauthorizedAccessException("User not found.");
         }
 
         // Проверяем, что пользователь не пытается изменить чужие данные
-        if (user.username != userUpdateDto.username)
+        if (user.Username != userUpdateDto.Username)
         {
             throw new UnauthorizedAccessException("You cannot modify another user's data.");
         }
 
         // Обновляем данные пользователя
-        user.firstName = userUpdateDto.firstName;
-        user.lastName = userUpdateDto.lastName;
-        user.email = userUpdateDto.email;
-        user.phone = userUpdateDto.phone;
-        user.image = userUpdateDto.image;
-        user.date = userUpdateDto.date;
+        user.FirstName = userUpdateDto.FirstName;
+        user.LastName = userUpdateDto.LastName;
+        user.Email = userUpdateDto.Email;
+        user.Phone = userUpdateDto.Phone;
+        user.Image = userUpdateDto.Image;
+        user.Date = userUpdateDto.Date;
 
         // Обновляем пользователя в базе данных
-        await _userRepository.UpdateUserAsync(user);
+        await _userRepository.UpdateUserAsync(user, cancellationToken);
 
         return new UserUpdateDto
         {
-            username = user.username,
-            firstName = user.firstName,
-            lastName = user.lastName,
-            email = user.email,
-            phone = user.phone,
-            image = user.image,
-            date = user.date
+            Username = user.Username,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Phone = user.Phone,
+            Image = user.Image,
+            Date = user.Date
         };
     }
 
 
-    private async Task<(string AccessToken, string RefreshToken)> GenerateTokens(User user)
+    private async Task<(string AccessToken, string RefreshToken)> GenerateTokens(User user, CancellationToken cancellationToken = default)
     {
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.username),
-            new Claim(ClaimTypes.Name, user.username),
-            new Claim("phone", user.phone),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim("phone", user.Phone),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, user.role)
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
@@ -237,7 +237,7 @@ public class AuthService : IAuthService
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiryTime = _timeProvider.GetLocalNow().AddDays(Convert.ToDouble(_configuration["Jwt:RefreshTokenExpiryDays"])).DateTime;
 
-        await _userRepository.UpdateUserAsync(user);
+        await _userRepository.UpdateUserAsync(user, cancellationToken);
 
 
         return (accessToken, refreshToken);
@@ -397,7 +397,7 @@ public class AuthService : IAuthService
         var parts = storedHash.Split('.', 3);
         if (parts.Length != 3)
         {
-            return false; // Неверный формат
+            return false; 
         }
 
         var iterations = Convert.ToInt32(parts[0]);
@@ -414,14 +414,14 @@ public class AuthService : IAuthService
         return actualHash == expectedHash;
     }
 
-    public async Task<string> UploadUserImage(IFormFile file)
+    public async Task<string> UploadUserImage(IFormFile file, CancellationToken cancellationToken = default)
     {
         if (file == null || file.Length == 0)
         {
             throw new ArgumentException("Файл не выбран");
         }
 
-        // Проверка допустимых форматов
+
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
         if (!allowedExtensions.Contains(fileExtension))
@@ -429,8 +429,8 @@ public class AuthService : IAuthService
             throw new ArgumentException("Допустимы только файлы JPG и PNG");
         }
 
-        // Проверка размеров изображения
-        using (var image = await Image.LoadAsync(file.OpenReadStream()))
+
+        using (var image = await Image.LoadAsync(file.OpenReadStream(), cancellationToken))
         {
             if (image.Width < 800 || image.Height < 800)
             {
@@ -449,28 +449,28 @@ public class AuthService : IAuthService
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            await file.CopyToAsync(stream);
+            await file.CopyToAsync(stream, cancellationToken);
         }
         return fileName;
     }
 
-    public async Task<ImageDto> GetImage(string fileName) //Передавал username
+    public ImageDto GetImage(string fileName)
     {
         //var user = await _userRepository.GetByUsernameAsync(userName);
         //if(user.image != fileName)
         //{
         //    throw new UnauthorizedAccessException("Вы не имеете доступа к этому изображению");
         //}
-        // Путь к файлу
+
         string appDataFolder = Path.Combine(Directory.GetCurrentDirectory(), "AppData");
         string profileImagesFolder = Path.Combine(appDataFolder, "ProfileImages");
         string filePath = Path.Combine(profileImagesFolder, fileName);
 
-        // Проверка существования файла
+
         if (!System.IO.File.Exists(filePath))
             throw new ArgumentException("Изображение не найдено");
 
-        // Определение MIME-типа
+
         string mimeType;
         switch (Path.GetExtension(fileName).ToLower())
         {
@@ -486,8 +486,8 @@ public class AuthService : IAuthService
         }
         return new ImageDto
         {
-            mimeType = mimeType,
-            filePath = filePath
+            MimeType = mimeType,
+            FilePath = filePath
         };
     }
 
@@ -498,39 +498,39 @@ public class AuthService : IAuthService
         return principal.Identity?.Name;
     }
 
-    public async Task<IEnumerable<UserAllDto>> GetAllUsers()
+    public async Task<IEnumerable<UserAllDto>> GetAllUsers(CancellationToken cancellationToken = default)
     {
-        var category = await _userRepository.GetAllAsync();
-        return category.Select(p => new UserAllDto
+        var users = await _userRepository.GetAllAsync(cancellationToken);
+        return users.Select(p => new UserAllDto
         {
-            username = p.username,
-            firstName = p.firstName,
-            lastName = p.lastName,
-            email = p.email,
-            phone = p.phone,
-            role = p.role
+            Username = p.Username,
+            FirstName = p.FirstName,
+            LastName = p.LastName,
+            Email = p.Email,
+            Phone = p.Phone,
+            Role = p.Role
         });
     }
 
-    public async Task<UserProfileDto> GetUserProfileAsync(ClaimsPrincipal user)
+    public async Task<UserProfileDto> GetUserProfileAsync(ClaimsPrincipal user, CancellationToken cancellationToken = default)
     {
         var username = user.Identity?.Name;
         if (string.IsNullOrEmpty(username))
             throw new UnauthorizedAccessException("User not authenticated.");
 
-        var dbUser = await _userRepository.GetByUsernameAsync(username);
+        var dbUser = await _userRepository.GetByUsernameAsync(username, cancellationToken);
         if (dbUser == null)
             throw new UnauthorizedAccessException("User not found.");
 
         return new UserProfileDto
         {
-            username = dbUser.username,
-            firstName = dbUser.firstName,
-            lastName = dbUser.lastName,
-            email = dbUser.email,
-            phone = dbUser.phone,
-            image = dbUser.image,
-            date = dbUser.date
+            Username = dbUser.Username,
+            FirstName = dbUser.FirstName,
+            LastName = dbUser.LastName,
+            Email = dbUser.Email,
+            Phone = dbUser.Phone,
+            Image = dbUser.Image,
+            Date = dbUser.Date
         };
     }
     private (bool IsValid, string ErrorMessage) ValidatePasswordStrength(string password)

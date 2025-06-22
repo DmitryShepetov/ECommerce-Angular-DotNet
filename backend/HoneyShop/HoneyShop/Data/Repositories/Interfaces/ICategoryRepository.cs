@@ -4,10 +4,10 @@ namespace HoneyShop.Data.Repositories.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetAllAsync();
-        Task<Category> GetByIdAsync(int categoryId);
-        Task AddAsync(Category category);
-        Task UpdateAsync(Category category);
-        Task DeleteAsync(int id);
+        Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<Category> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default);
+        Task AddAsync(Category category, CancellationToken cancellationToken = default);
+        Task UpdateAsync(Category category, CancellationToken cancellationToken = default);
+        Task DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
 }

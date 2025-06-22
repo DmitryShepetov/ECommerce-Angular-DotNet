@@ -2,10 +2,10 @@
 {
     public class OrderItemDto
     {
-        public int id { get; set; }
-        public string imageUrl { get; set; }
-        public string name { get; set; }
-        public decimal price { get; set; }
-        public int quantity { get; set; }
+        public int Id { get; set; }
+        public string ImageUrl { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
     }
 }

@@ -6,30 +6,33 @@ namespace HoneyShop.Data.Repositories
 {
     public class OrderStatusHistoryRepository : IOrderStatusHistoryRepository
     {
-        private readonly AppDBContext appDBContext;
-        public OrderStatusHistoryRepository(AppDBContext appDBContext)
+        private readonly AppDbContext _appDbContext;
+        public OrderStatusHistoryRepository(AppDbContext appDbContext)
         {
-            this.appDBContext = appDBContext;
+            _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<OrderStatusHistory>> GetByIdOrderAsync(int idOrder) => await appDBContext.OrderStatusHistories.Where(o => o.OrderId == idOrder).ToListAsync();
-        public async Task<OrderStatusHistory> GetByIdAsync(int id) => await appDBContext.OrderStatusHistories.FindAsync(id);
-        public async Task AddAsync(OrderStatusHistory order)
+        public async Task<IEnumerable<OrderStatusHistory>> GetByIdOrderAsync(int orderId, CancellationToken cancellationToken = default) => 
+            await _appDbContext.OrderStatusHistories.Where(o => o.OrderId == orderId).ToListAsync(cancellationToken);
+
+        public async Task<OrderStatusHistory> GetByIdAsync(int id, CancellationToken cancellationToken = default) => 
+            await _appDbContext.OrderStatusHistories.FindAsync(new object[] { id }, cancellationToken);
+        public async Task AddAsync(OrderStatusHistory order, CancellationToken cancellationToken = default)
         {
-            await appDBContext.OrderStatusHistories.AddAsync(order);
-            await appDBContext.SaveChangesAsync();
+            await _appDbContext.OrderStatusHistories.AddAsync(order, cancellationToken);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task UpdateAsync(OrderStatusHistory order)
+        public async Task UpdateAsync(OrderStatusHistory order, CancellationToken cancellationToken = default)
         {
-            appDBContext.OrderStatusHistories.Update(order);
-            await appDBContext.SaveChangesAsync();
+            _appDbContext.OrderStatusHistories.Update(order);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var order = await appDBContext.OrderStatusHistories.FindAsync(id);
+            var order = await _appDbContext.OrderStatusHistories.FindAsync(new object[] { id }, cancellationToken);
             if (order != null)
             {
-                appDBContext.OrderStatusHistories.Remove(order);
-                await appDBContext.SaveChangesAsync();
+                _appDbContext.OrderStatusHistories.Remove(order);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
             }
         }
     }

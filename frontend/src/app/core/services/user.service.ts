@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 
 export class UserService {
-  private apiUrl = "https://localhost:5001/api/users";
+  private apiUrl = "https://localhost:5001/api/auth/users";
   constructor(private http: HttpClient, private router: Router) {}
 
   updateUserProfile(updatedUserData: any): Observable<any> {

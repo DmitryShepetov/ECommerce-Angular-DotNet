@@ -6,31 +6,37 @@ namespace HoneyShop.Data.Repositories
 {
     public class HoneyRepository : IHoneyRepository
     {
-        private readonly AppDBContext appDBContext;
-        public HoneyRepository(AppDBContext appDBContext)
+        private readonly AppDbContext _appDbContext;
+        public HoneyRepository(AppDbContext appDBContext)
         {
-            this.appDBContext = appDBContext;
+            _appDbContext = appDBContext;
         }
-        public async Task<IEnumerable<Honey>> GetAllAsync() => await appDBContext.Honey.ToListAsync();
-        public async Task<IEnumerable<Honey>> GetAllWithCategoryAsync() => await appDBContext.Honey.Include(x => x.Category).ToListAsync();
-        public async Task<Honey> GetByIdAsync(int honeyId) => await appDBContext.Honey.FindAsync(honeyId);
-        public async Task AddAsync(Honey honey)
+        public async Task<IEnumerable<Honey>> GetAllAsync(CancellationToken cancellationToken = default) => 
+            await _appDbContext.Honeys.ToListAsync(cancellationToken);
+
+        public async Task<IEnumerable<Honey>> GetAllWithCategoryAsync(CancellationToken cancellationToken = default) => 
+            await _appDbContext.Honeys.Include(x => x.Category).ToListAsync(cancellationToken);
+
+        public async Task<Honey> GetByIdAsync(int honeyId, CancellationToken cancellationToken = default) => 
+            await _appDbContext.Honeys.FindAsync(new object[] { honeyId }, cancellationToken);
+
+        public async Task AddAsync(Honey honey, CancellationToken cancellationToken = default)
         {
-            await appDBContext.Honey.AddAsync(honey);
-            await appDBContext.SaveChangesAsync();
+            await _appDbContext.Honeys.AddAsync(honey, cancellationToken);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task UpdateAsync(Honey honey)
+        public async Task UpdateAsync(Honey honey, CancellationToken cancellationToken = default)
         {
-            appDBContext.Honey.Update(honey);
-            await appDBContext.SaveChangesAsync();
+            _appDbContext.Honeys.Update(honey);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var honey = await appDBContext.Honey.FindAsync(id);
+            var honey = await _appDbContext.Honeys.FindAsync(new object[] { id }, cancellationToken);
             if (honey != null)
             {
-                appDBContext.Honey.Remove(honey);
-                await appDBContext.SaveChangesAsync();
+                _appDbContext.Honeys.Remove(honey);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
             }
         }
     }

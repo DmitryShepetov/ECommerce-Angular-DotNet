@@ -22,23 +22,81 @@ export class AdminOrdersComponent implements OnInit {
   statusesOrder = ['Принят в обработку', 'Передан в доставку', 'Выполнен', 'Отменён'];
   sortIdActive = true;
   sortStatusActive = false;
+  currentPage: number = 1;
+  totalPages: number = 0;
+  pages: number[] = [];
+  pageSize: number = 5;
+  Math = Math;
 
   constructor(private orderService: OrderService, private orderStatusHistoryService: OrderStatusHistoryService){}
 
   ngOnInit(): void {
-    this.orderService.getAllOrders().subscribe(data => {
-      this.orders = data
+    // this.orderService.getAllOrders().subscribe(data => {
+    //   this.orders = data
+    //   const statusRequests = this.orders.map(order => 
+    //     this.orderStatusHistoryService.getOrderStatusHistoryByIdStatus(order.id).toPromise()
+    //   );
+    //   Promise.all(statusRequests).then(statusHistories => {
+    //     this.orders.forEach((order, index) => {
+    //       order.statusHistory = statusHistories[index] || []; // Присваиваем массив статусов
+    //     });
+    //     this.sortOrders();
+    //     this.sortOrdersByStatus();
+    //   });
+    // });
+    this.loadOrders(this.currentPage, this.pageSize);
+  }
+
+    loadOrders(page: number, pageSize: number): void {
+    this.orderService.GetPagedOrders(page, pageSize).subscribe(response => {
+      this.orders = response.data;
+      this.totalPages = response.totalCount;
+      this.currentPage = response.page;
+      this.pageSize = response.pageSize;
+      this.totalPages = Math.ceil(this.totalPages / this.pageSize);
+      this.generatePageNumbers();
+      
       const statusRequests = this.orders.map(order => 
         this.orderStatusHistoryService.getOrderStatusHistoryByIdStatus(order.id).toPromise()
       );
+      
       Promise.all(statusRequests).then(statusHistories => {
         this.orders.forEach((order, index) => {
-          order.statusHistory = statusHistories[index] || []; // Присваиваем массив статусов
+          order.statusHistory = statusHistories[index] || [];
         });
         this.sortOrders();
         this.sortOrdersByStatus();
       });
     });
+  }
+
+  
+
+  generatePageNumbers(): void {
+    this.pages = [];
+    const maxVisiblePages = 5; // Максимальное количество видимых кнопок
+    
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      this.pages.push(i);
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.loadOrders(page, this.pageSize);
+    }
+  }
+
+  changePageSize(size: number): void {
+    this.pageSize = size;
+    this.loadOrders(1, size);
   }
 
   toggleSort() {

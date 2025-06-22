@@ -4,8 +4,8 @@ namespace HoneyShop.Models.DTOs
 {
     public class CategoryDto
     {
-        public int id { get; set; }
-        public string categoryName { get; set; }
-        public string desc { get; set; }
+        public int Id { get; set; }
+        public string CategoryName { get; set; }
+        public string Desc { get; set; }
     }
 }

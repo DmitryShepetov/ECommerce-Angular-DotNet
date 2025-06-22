@@ -12,11 +12,6 @@ export class UserStoreService {
   private username$ = new BehaviorSubject<string>("");
   private role$ = new BehaviorSubject<string>("");
   private phone$ = new BehaviorSubject<string>("");
-  private email$ = new BehaviorSubject<string>("");
-  private firstName$ = new BehaviorSubject<string>("");
-  private lastName$ = new BehaviorSubject<string>("");
-  private date$ = new BehaviorSubject<string>("");
-  private image$ = new BehaviorSubject<string>("");
 
   constructor() {}
 

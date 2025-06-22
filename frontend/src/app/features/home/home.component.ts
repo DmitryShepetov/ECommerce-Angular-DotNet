@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   }
 
   get filteredProducts() {
-    return this.honey.filter(product => product.categoryid === this.selectedCategoryId);
+    return this.honey.filter(product => product.categoryId === this.selectedCategoryId);
   }
   selectCategory(categoryId: number): void {
     this.selectedCategoryId = categoryId; // Устанавливаем выбранную категорию

@@ -2,18 +2,18 @@
 {
     public class HoneyCategoryDto
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string shortDesc { set; get; }
-        public string longDesc { get; set; }
-        public string shelfLife { get; set; }
-        public int price { get; set; }
-        public string bju { get; set; }
-        public string priceType { get; set; }
-        public bool isFavorite { get; set; }
-        public bool newHoney { get; set; }
-        public bool avaliable { get; set; }
-        public string imageUrl { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ShortDesc { set; get; }
+        public string LongDesc { get; set; }
+        public string ShelfLife { get; set; }
+        public int Price { get; set; }
+        public string Bju { get; set; }
+        public string PriceType { get; set; }
+        public bool IsFavorite { get; set; }
+        public bool NewHoney { get; set; }
+        public bool Available { get; set; }
+        public string ImageUrl { get; set; }
         public CategoryDto Categories { get; set; }
     }
 }

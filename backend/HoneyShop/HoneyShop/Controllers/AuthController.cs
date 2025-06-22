@@ -27,11 +27,11 @@ namespace HoneyShop.Controllers
         /// Регистрация нового пользователя
         /// </summary>
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto, CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _authService.RegisterAsync(registerDto);
+                var response = await _authService.RegisterAsync(registerDto, cancellationToken);
                 SetRefreshTokenCookie(response.RefreshToken);
                 return Ok(new { response.AccessToken });
             }
@@ -49,11 +49,11 @@ namespace HoneyShop.Controllers
         /// Аутентификация пользователя
         /// </summary>
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto, CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _authService.LoginAsync(loginDto);
+                var response = await _authService.LoginAsync(loginDto, cancellationToken);
                 SetRefreshTokenCookie(response.RefreshToken);
                 return Ok(new { response.AccessToken });
             }
@@ -71,7 +71,7 @@ namespace HoneyShop.Controllers
         /// Обновление Access Token с помощью Refresh Token
         /// </summary>
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace HoneyShop.Controllers
                     return Unauthorized(new { message = "Refresh token is missing" });
                 }
 
-                var response = await _authService.RefreshTokenAsync(refreshToken);
+                var response = await _authService.RefreshTokenAsync(refreshToken, cancellationToken);
 
                 SetRefreshTokenCookie(response.RefreshToken);
                 return Ok(new { response.AccessToken });
@@ -102,7 +102,7 @@ namespace HoneyShop.Controllers
         /// </summary>
         [Authorize]
         [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken()
+        public async Task<IActionResult> RevokeToken(CancellationToken cancellationToken)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace HoneyShop.Controllers
                 if (string.IsNullOrEmpty(username))
                     return Unauthorized();
 
-                await _authService.RevokeTokenAsync(username);
+                await _authService.RevokeTokenAsync(username, cancellationToken);
 
                 Response.Cookies.Delete("refreshToken");
 
@@ -124,7 +124,7 @@ namespace HoneyShop.Controllers
 
         [Authorize]
         [HttpPost("log-out")]
-        public async Task<IActionResult> LogOut()
+        public IActionResult LogOut()
         {
             try
             {
@@ -148,11 +148,11 @@ namespace HoneyShop.Controllers
         /// </summary>
         [Authorize]
         [HttpPut("profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateDto userUpdateDto)
+        public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateDto userUpdateDto, CancellationToken cancellationToken)
         {
             try
             {
-                var updatedUser = await _authService.UpdateProfile(userUpdateDto, User);
+                var updatedUser = await _authService.UpdateProfile(userUpdateDto, User, cancellationToken);
                 return Ok(updatedUser);
             }
             catch (UnauthorizedAccessException ex)
@@ -193,11 +193,11 @@ namespace HoneyShop.Controllers
         /// </summary>
         [Authorize]
         [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file, CancellationToken cancellationToken)
         {
             try
             {
-                var imageUrl = await _authService.UploadUserImage(file);
+                var imageUrl = await _authService.UploadUserImage(file, cancellationToken);
                 return Ok(new { imageUrl });
             }
             catch (ArgumentException ex)
@@ -217,7 +217,7 @@ namespace HoneyShop.Controllers
         [AllowAnonymous]
        
         [HttpGet("profile-image/{fileName}")]
-        public async Task<IActionResult> GetProfileImage(string fileName)
+        public IActionResult GetProfileImage(string fileName)
         {
             try
             {
@@ -225,12 +225,12 @@ namespace HoneyShop.Controllers
                 //if (string.IsNullOrEmpty(username))
                 //    return Unauthorized();
 
-               var image = await _authService.GetImage(fileName); // Я передавал username
+               var image =  _authService.GetImage(fileName); // Я передавал username
 
 
 
                 // Возвращаем файл как поток
-                return PhysicalFile(image.filePath, image.mimeType);
+                return PhysicalFile(image.FilePath, image.MimeType);
             }
             catch (Exception ex)
             {
@@ -243,11 +243,11 @@ namespace HoneyShop.Controllers
         /// </summary>
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
         {
             try
             {
-                var users = await _authService.GetAllUsers();
+                var users = await _authService.GetAllUsers(cancellationToken);
                 return Ok(users);
             }
             catch (UnauthorizedAccessException)
@@ -262,11 +262,11 @@ namespace HoneyShop.Controllers
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<IActionResult> GetProfile()
+        public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
         {
             try
             {
-                var profile = await _authService.GetUserProfileAsync(User);
+                var profile = await _authService.GetUserProfileAsync(User, cancellationToken);
                 return Ok(profile);
             }
             catch (UnauthorizedAccessException ex)

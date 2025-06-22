@@ -20,11 +20,11 @@ namespace HoneyShop.Controllers
             _honeyService = honeyService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllHoney()
+        public async Task<IActionResult> GetAllHoney(CancellationToken cancellationToken)
         {
             try
             {
-                var honey = await _honeyService.GetAllHoneyAsync();
+                var honey = await _honeyService.GetAllHoneyAsync(cancellationToken);
                 return Ok(honey);
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace HoneyShop.Controllers
             }
         }
         [HttpGet("withCategory")]
-        public async Task<IActionResult> GetAllHoneyWithCategory()
+        public async Task<IActionResult> GetAllHoneyWithCategory(CancellationToken cancellationToken)
         {
             try
             {
-                var honey = await _honeyService.GetAllHoneyWithCategoryAsync();
+                var honey = await _honeyService.GetAllHoneyWithCategoryAsync(cancellationToken);
                 return Ok(honey);
             }
             catch (Exception ex)
@@ -46,11 +46,11 @@ namespace HoneyShop.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetHoneyById(int id)
+        public async Task<IActionResult> GetHoneyById(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var honey = await _honeyService.GetHoneyByIdAsync(id);
+                var honey = await _honeyService.GetHoneyByIdAsync(id, cancellationToken);
                 return Ok(honey);
             }
             catch (KeyNotFoundException ex)
@@ -60,11 +60,11 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddHoney([FromBody] HoneyDto honeyDto)
+        public async Task<IActionResult> AddHoney([FromBody] HoneyDto honeyDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _honeyService.AddHoneyAsync(honeyDto);
+                await _honeyService.AddHoneyAsync(honeyDto, cancellationToken);
                 return Ok(new { message = "Product added successfully." });
             }
             catch (ArgumentException ex)
@@ -78,11 +78,11 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateHoney(int id, [FromBody] HoneyDto honeyDto)
+        public async Task<IActionResult> UpdateHoney(int id, [FromBody] HoneyDto honeyDto, CancellationToken cancellationToken)
         {
             try
             {
-                await _honeyService.UpdateHoneyAsync(id, honeyDto);
+                await _honeyService.UpdateHoneyAsync(id, honeyDto, cancellationToken);
                 return Ok(new { message = "Product updated successfully." });
             }
             catch (KeyNotFoundException ex)
@@ -96,11 +96,11 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteHoney(int id)
+        public async Task<IActionResult> DeleteHoney(int id, CancellationToken cancellationToken)
         {
             try
             {
-                await _honeyService.DeleteHoneyAsync(id);
+                await _honeyService.DeleteHoneyAsync(id, cancellationToken);
                 return Ok(new { message = "Product deleted successfully." });
             }
             catch (KeyNotFoundException ex)
@@ -110,7 +110,7 @@ namespace HoneyShop.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file, CancellationToken cancellationToken)
         {
             if (file == null || file.Length == 0)
             {
@@ -126,7 +126,7 @@ namespace HoneyShop.Controllers
             }
 
             // Проверяем размеры изображения
-            using (var image = await SixLabors.ImageSharp.Image.LoadAsync(file.OpenReadStream())) 
+            using (var image = await SixLabors.ImageSharp.Image.LoadAsync(file.OpenReadStream(), cancellationToken)) 
             {
                 if (image.Width < 800 || image.Height < 800)
                 {
@@ -144,7 +144,7 @@ namespace HoneyShop.Controllers
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                await file.CopyToAsync(stream, cancellationToken);
             }
 
             string imageUrl = $"/uploads/{fileName}";

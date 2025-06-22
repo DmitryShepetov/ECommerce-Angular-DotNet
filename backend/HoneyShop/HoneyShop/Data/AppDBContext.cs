@@ -4,31 +4,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HoneyShop.Data
 {
-    public class AppDBContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public AppDBContext()
+        public AppDbContext()
         {
 
         }
-        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }
+        public DbSet<Honey> Honeys { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.username)
+                .HasIndex(u => u.Username)
                 .IsUnique();
+
             modelBuilder.Entity<OrderItem>()
                 .HasOne(o => o.Order)
                 .WithMany(o => o.Items)
                 .HasForeignKey(o => o.OrderId);
         }
-        public DbSet<Honey> Honey { get; set; }
-        public DbSet<Order> Order { get; set; }
-        public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
-        public DbSet<OrderItem> OrderItem { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<User> Users { get; set; }
     }
 }

@@ -7,30 +7,34 @@ namespace HoneyShop.Data.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly AppDBContext appDBContext;
-        public CategoryRepository(AppDBContext appDBContext)
+        private readonly AppDbContext _appDbContext;
+        public CategoryRepository(AppDbContext appDBContext)
         {
-            this.appDBContext = appDBContext;
+            _appDbContext = appDBContext;
         }
-        public async Task<IEnumerable<Category>> GetAllAsync() => await appDBContext.Category.ToListAsync();
-        public async Task<Category> GetByIdAsync(int categoryId) => await appDBContext.Category.FindAsync(categoryId);
-        public async Task AddAsync(Category category)
+        public async Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default) => 
+            await _appDbContext.Categories.ToListAsync(cancellationToken);
+
+        public async Task<Category> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default) => 
+            await _appDbContext.Categories.FindAsync(new object[] { categoryId }, cancellationToken);
+
+        public async Task AddAsync(Category category, CancellationToken cancellationToken = default)
         {
-            await appDBContext.Category.AddAsync(category);
-            await appDBContext.SaveChangesAsync();
+            await _appDbContext.Categories.AddAsync(category, cancellationToken);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task UpdateAsync(Category category)
+        public async Task UpdateAsync(Category category, CancellationToken cancellationToken = default)
         {
-            appDBContext.Category.Update(category);
-            await appDBContext.SaveChangesAsync();
+            _appDbContext.Categories.Update(category);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var category = await appDBContext.Category.FindAsync(id);
+            var category = await _appDbContext.Categories.FindAsync(new object[] { id }, cancellationToken);
             if (category != null)
             {
-                appDBContext.Category.Remove(category);
-                await appDBContext.SaveChangesAsync();
+                _appDbContext.Categories.Remove(category);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
             }
         }
     }

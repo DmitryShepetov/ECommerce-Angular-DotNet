@@ -1,5 +1,6 @@
 ﻿using HoneyShop.Data.Entities;
 using HoneyShop.Data.Repositories.Interfaces;
+using HoneyShop.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 
@@ -7,31 +8,53 @@ namespace HoneyShop.Data.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly AppDBContext appDBContext;
-        public OrderRepository(AppDBContext appDBContext)
+        private readonly AppDbContext _appDbContext;
+        public OrderRepository(AppDbContext appDBContext)
         {
-            this.appDBContext = appDBContext;
+            _appDbContext = appDBContext;
         }
-        public async Task<IEnumerable<Order>> GetAllAsync() => await appDBContext.Order.Include(o => o.Items).ToListAsync();
-        public async Task<Order> GetByIdAsync(int idOrder) => await appDBContext.Order.Include(o => o.Items).FirstOrDefaultAsync(p => p.id == idOrder);
-        public async Task<IEnumerable<Order>> GetOrderByPhoneNumberAsync(string phone) => await appDBContext.Order.Where(p => p.phone == phone).Include(o => o.Items).ToListAsync();
-        public async Task AddAsync(Order order)
+        public async Task<IEnumerable<Order>> GetAllAsync(CancellationToken cancellationToken = default) => 
+            await _appDbContext.Orders.Include(o => o.Items).ToListAsync(cancellationToken);
+
+        public async Task<Order> GetOrderByIdAsync(int idOrder, CancellationToken cancellationToken = default) => 
+            await _appDbContext.Orders.Include(o => o.Items).FirstOrDefaultAsync(p => p.Id == idOrder, cancellationToken);
+
+        public async Task<IEnumerable<Order>> GetOrderByPhoneAsync(string phone, CancellationToken cancellationToken = default) => 
+            await _appDbContext.Orders.Where(p => p.Phone == phone).Include(o => o.Items).ToListAsync(cancellationToken);
+
+        public async Task<List<Order>> GetPaginatedOrdersAsync(PaginationParameters paginationParams, CancellationToken cancellationToken)
         {
-            await appDBContext.Order.AddAsync(order);
-            await appDBContext.SaveChangesAsync();
+            return await _appDbContext.Orders
+                .Include(o => o.Items)
+                .Include(o => o.StatusHistory)
+                .OrderByDescending(o => o.DateTime)
+                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Take(paginationParams.PageSize)
+                .ToListAsync(cancellationToken);
         }
-        public async Task UpdateAsync(Order order)
+
+        public async Task<int> GetTotalOrdersCountAsync(CancellationToken cancellationToken)
         {
-            appDBContext.Order.Update(order);
-            await appDBContext.SaveChangesAsync();
+            return await _appDbContext.Orders.CountAsync(cancellationToken);
         }
-        public async Task DeleteAsync(int id)
+
+        public async Task AddAsync(Order order, CancellationToken cancellationToken = default)
         {
-            var order = await appDBContext.Order.FindAsync(id);
+            await _appDbContext.Orders.AddAsync(order, cancellationToken);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
+        }
+        public async Task UpdateAsync(Order order, CancellationToken cancellationToken = default)
+        {
+            _appDbContext.Orders.Update(order);
+            await _appDbContext.SaveChangesAsync(cancellationToken);
+        }
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var order = await _appDbContext.Orders.FindAsync(new object[] { id }, cancellationToken);
             if (order != null)
             {
-                appDBContext.Order.Remove(order);
-                await appDBContext.SaveChangesAsync();
+                _appDbContext.Orders.Remove(order);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
             }
         }
     }
